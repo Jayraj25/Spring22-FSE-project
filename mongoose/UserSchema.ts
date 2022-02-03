@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import Location from "../models/Location";
+import User from "../models/User";
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema<User>({
    username: {type: String, required: true},
    password: {type: String, required: true},
    firstName: String,
@@ -14,7 +14,8 @@ const UserSchema = new mongoose.Schema({
    biography: String,
    dateOfBirth: Date,
    joined: {type: Date, default: Date.now},
-   location: Location
+   location: {latitude: Number, longitude: Number},
+   status: {type: String, default: 'OFFLINE', enum: ['OFFLINE','ACTIVE']}
 }, {collection: 'users'});
 
 export default UserSchema;
