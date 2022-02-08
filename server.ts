@@ -3,8 +3,12 @@ import bodyParser from "body-parser";
 import UserController from './controllers/UserController';
 import TuitController from './controllers/TuitController';
 
+require("dotenv").config({ path: "./variables.env"});
+console.log(process.env.DB_PASSWORD);
+
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:Jayraj%403775@cluster0.h9vbo.mongodb.net/Tuiter?retryWrites=true&w=majority');
+// mongoose.connect('mongodb+srv://fsemongodb:Jayraj%403775@cluster0.h9vbo.mongodb.net/Tuiter?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD + '@cluster0.h9vbo.mongodb.net/Tuiter?retryWrites=true&w=majority');
 
 const app = express();
 app.use(bodyParser.json());
