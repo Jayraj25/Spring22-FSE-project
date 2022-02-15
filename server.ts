@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express';
 import bodyParser from "body-parser";
 import UserController from './controllers/UserController';
 import TuitController from './controllers/TuitController';
+import LikesController from './controllers/LikesController';
 
 require("dotenv").config({ path: "./variables.env"});
 console.log(process.env.DB_PASSWORD);
@@ -21,6 +22,7 @@ app.get('/add/:a/:b', (req: Request, res: Response) =>
 
 const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
+const likesController = LikesController.getInstance(app);
 
 const PORT = 4000;
 

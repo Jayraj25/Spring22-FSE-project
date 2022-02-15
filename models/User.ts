@@ -1,4 +1,4 @@
-import AccounType from "./AccountType";
+import AccountType from "./AccountType";
 import Location from "./Location";
 import MaritalStatus from "./MaritalStatus";
 import Status from "./Status";
@@ -11,7 +11,7 @@ export default interface User {
     email: string;
     profilePhoto?: string;
     headerImage?: string;
-    accountType?: AccounType;
+    accountType?: AccountType;
     maritalStatus?: MaritalStatus;
     biography?: string;
     dateOfBirth?: Date;
