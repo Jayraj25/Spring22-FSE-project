@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import UserController from './controllers/UserController';
 import TuitController from './controllers/TuitController';
 import LikesController from './controllers/LikesController';
-import FollowController from './controllers/followController';
+import FollowController from './controllers/FollowController';
 
 require("dotenv").config({ path: "./variables.env"});
 // console.log(process.env.DB_PASSWORD);
