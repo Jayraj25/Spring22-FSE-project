@@ -1,0 +1,8 @@
+import { Request, Response } from "express";
+
+export default interface MessageControllerI {
+    sendMessage (req: Request, res: Response): void;
+    messageListSent (req: Request, res: Response): void;
+    messageListReceived (req: Request, res: Response): void;
+    deleteMessage (req: Request, res: Response): void;
+}
