@@ -4,6 +4,7 @@ import UserController from './controllers/UserController';
 import TuitController from './controllers/TuitController';
 import LikesController from './controllers/LikesController';
 import FollowController from './controllers/FollowController';
+import BookmarkController from './controllers/BookmarkController';
 
 require("dotenv").config({ path: "./variables.env"});
 // console.log(process.env.DB_PASSWORD);
@@ -25,6 +26,7 @@ const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikesController.getInstance(app);
 const followController = FollowController.getInstance(app);
+const bookmarkController = BookmarkController.getInstance(app);
 
 const PORT = 4000;
 
