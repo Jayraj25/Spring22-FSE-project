@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import followSchema from "./followSchema";
+import followSchema from "./FollowSchema";
 
 const followModel = mongoose.model('followModel',followSchema);
 
