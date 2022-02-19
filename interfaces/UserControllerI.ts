@@ -1,4 +1,7 @@
-import {Request, Response, Router} from "express";
+/**
+ * @file Controller Interface of RESTful Web service API for users resource
+ */
+import {Request, Response} from "express";
 
 export default interface UserControllerI {
    findAllUsers(req: Request, res: Response): void;

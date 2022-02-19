@@ -1,3 +1,6 @@
+/**
+ * @file Controller Interface of RESTful Web service API for tuit resource
+ */
 import { Request, Response } from "express";
 
 export default interface TuitControllerI {

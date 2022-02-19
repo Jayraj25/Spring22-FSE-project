@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for tuits.
+ */
 import Tuit from "../models/Tuit";
 
 export default interface TuitDaoI {

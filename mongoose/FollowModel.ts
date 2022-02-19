@@ -1,3 +1,7 @@
+/**
+ * @file Implements mongoose model to CRUD
+ * documents in the follow collection
+ */
 import mongoose from "mongoose";
 import followSchema from "./FollowSchema";
 

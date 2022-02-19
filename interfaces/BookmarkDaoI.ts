@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for bookmarks.
+ */
 import Bookmarks from "../models/Bookmarks";
 
 export default interface BookmarkDaoI {

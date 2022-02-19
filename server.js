@@ -1,18 +1,16 @@
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/tuiter');
-
+/**
+ * @file Implements an Express Node HTTP server.
+ */
 const express = require('express');
-const { default: UserController } = require('./controllers/UserController');
-const { default: UserDao } = require('./daos/UserDao');
 const app = express();
 app.use(express.json());
 
 app.get('/hello', (req, res) =>
   res.send('Hello World!'));
 
-
-const userController = new UserController(app,new UserDao());
-app.use('./',userController);
-
+/**
+ * Start a server listening at port 4000 locally
+ * but use environment variable PORT on Heroku if available.
+ */
 const PORT = 4000;
 app.listen(PORT);

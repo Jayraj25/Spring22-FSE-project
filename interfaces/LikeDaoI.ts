@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for likes.
+ */
 import Likes from "../models/Likes";
 
 export default interface LikeDaoI {

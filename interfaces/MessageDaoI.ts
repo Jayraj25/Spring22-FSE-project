@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for messages.
+ */
 import Message from "../models/Message";
 
 export default interface MessageDaoI {

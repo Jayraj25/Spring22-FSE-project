@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for users.
+ */
 import User from "../models/User";
 
 export default interface UserDaoI {
