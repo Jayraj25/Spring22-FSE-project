@@ -9,4 +9,5 @@ export default interface followControllerI {
     getFollowersList(req: Request, res: Response): void;
     getFollowingList(req: Request, res: Response): void;
     getFollowerFollowing(req: Request, res: Response): void;
+    getAllFollowersFollowing(req: Request, res: Response): void;
 }

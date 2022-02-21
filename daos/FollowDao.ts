@@ -3,6 +3,7 @@
  * to integrate with MongoDB
  */
 import followDaoI from "../interfaces/FollowDaoI";
+import Follow from "../models/Follow";
 import followModel from "../mongoose/FollowModel";
 
 /**
@@ -56,12 +57,20 @@ export default class FollowDao implements followDaoI {
     }
 
     /**
-     * Retrieves all the instances of follow from database.
-     * @param {string} uid user's primary key.
+     * Retrieves the instance of follow based on id from database.
+     * @param {string} fid follows primary key.
      * @returns Promise To be notified when the list is retrieved from the database.
      */
     async getFollowerFollowing(fid: string): Promise<any> {
         return await followModel.findById(fid).populate("userFollower").populate("userFollowing").exec();
+    }
+
+    /**
+     * Retrieves all the instances of follow from database.
+     * @returns Promise To be notified when the list is retrieved from the database.
+     */
+    async getAllFollowerFollowing(): Promise<any> {
+        return await followModel.find();
     }
 
     /**

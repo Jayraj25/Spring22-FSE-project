@@ -14,6 +14,8 @@ import Message from "../models/Message";
  *     a given users</li>
  *     <li>GET /api/:uid/listSentMessages to retrieve all the sent messages by a user</li>
  *     <li>GET /api/:uid/listReceivedMessages to retrieve all the messages received by a user</li>
+ *     <li>GET /api/messages/:mid to retrieve specific message instance from the DB</li>
+ *     <li>GET /api/messages/ to retrieve all the messages from DB</li>
  *     <li>DELETE /api/:uid/removes/:mid to remove a particular message instance sent by a user</li>
  * </ul>
  * @property {MessageDao} messageDao Singleton DAO implementing tuit CRUD operations
@@ -38,6 +40,8 @@ export default class MessageController implements MessageControllerI {
             app.post("/api/:u1id/messages/:u2id",this.messageController.sendMessage);
             app.get("/api/:uid/listSentMessages",this.messageController.messageListSent);
             app.get("/api/:uid/listReceivedMessages",this.messageController.messageListReceived);
+            app.get("/api/messages/:mid",this.messageController.getMessage);
+            app.get("/api/messages/",this.messageController.getAllMessages);
             app.delete("/api/:uid/removes/:mid",this.messageController.deleteMessage);
         }
         return this.messageController;
@@ -85,5 +89,24 @@ export default class MessageController implements MessageControllerI {
      */
     deleteMessage = (req: Request, res: Response) => {
         MessageController.messageDao.deleteMessage(req.params.uid,req.params.mid).then((status) => res.json(status));
+    }
+
+    /**
+     * @param {Request} req Represents request from client, to retrieve all messages from database.
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing all the message objects
+     */
+    getAllMessages = (req: Request, res: Response) => {
+        MessageController.messageDao.getAllMessages().then((messages: Message[]) => res.json(messages));
+    }
+
+    /**
+     * @param {Request} req Represents request from client, including path
+     * parameter mid identifying the primary key of the message to be retrieved.
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the message object.
+     */
+     getMessage = (req: Request, res: Response) => {
+        MessageController.messageDao.getMessage(req.params.mid).then((messages: Message) => res.json(messages));
     }
 }

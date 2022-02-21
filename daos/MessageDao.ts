@@ -12,6 +12,7 @@ import messageModel from "../mongoose/MessageModel";
  * @property {MessageDao} messageDao Private single instance of MessageDao
  */
 export default class MessageDao implements MessageDaoI {
+
     private static messageDao: MessageDao | null = null;
 
     /**
@@ -65,5 +66,23 @@ export default class MessageDao implements MessageDaoI {
      */
      async deleteMessage(uid: String, mid: String): Promise<any> {
         return await messageModel.deleteOne({_id: mid, from: uid});
+    }
+
+    /**
+     * Uses MessageModel to retrieve all message documents from messages collection
+     * @returns Promise To be notified when the messages are retrieved from
+     * database
+     */
+    async getAllMessages(): Promise<Message[]> {
+        return await messageModel.find();
+    }
+
+    /**
+     * Uses MessageModel to retrieve all message documents from messages collection
+     * @returns Promise To be notified when the messages are retrieved from
+     * database
+     */
+     async getMessage(mid: String): Promise<any> {
+        return await messageModel.findById(mid);
     }
 }

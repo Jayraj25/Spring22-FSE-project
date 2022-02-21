@@ -8,4 +8,5 @@ export default interface followDaoI {
     getFollowersList (uid: String): Promise<any>;
     getFollowingList (uid: String): Promise<any>;
     getFollowerFollowing (fid: String): Promise<any>;
+    getAllFollowerFollowing (): Promise<any>;
 }

@@ -15,6 +15,7 @@ import Follow from "../models/Follow";
  *     <li>GET /api/:uid/followers to retrieve all the followers of a user</li>
  *     <li>GET /api/:uid/following to retrieve all the users that are being 
  *      followed by a particular user</li>
+ *     <li>GET /api/follows/ to retrieve all follows instances from the DB</li>
  *     <li>GET /api/followerFollowing/:fid to retrieve a particular follow instance </li>
  *     <li>DELETE /api/:uid/follows/:userUnfollowedId to remove a particular follow 
  *      instance when a user unfollows another user</li>
@@ -41,6 +42,7 @@ export default class FollowController implements followControllerI {
             app.post("/api/:uid/follows/:userFollowedId", this.followController.userFollowsUser);
             app.get("/api/:uid/followers",this.followController.getFollowersList);
             app.get("/api/:uid/following",this.followController.getFollowingList);
+            app.get("/api/follows/",this.followController.getAllFollowersFollowing);
             app.get("/api/followerFollowing/:fid", this.followController.getFollowerFollowing);
             app.delete("/api/:uid/follows/:userUnfollowedId", this.followController.userUnfollowsUser);
         }
@@ -82,7 +84,17 @@ export default class FollowController implements followControllerI {
      * Retrieves all follow instance from the database and returns an array of follow instances.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON arrays containing the follow objects
+     * body formatted as JSON arrays containing all the follow objects
+     */
+    getAllFollowersFollowing = (req: Request, res: Response) => {
+        FollowController.followDao.getAllFollowerFollowing().then((result: Follow[]) => res.json(result))
+    }
+
+    /**
+     * Retrieves a follow instance based on the id from the database.
+     * @param {Request} req Represents request from client
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the follow object
      */
     getFollowerFollowing = (req: Request, res: Response) => 
         FollowController.followDao.getFollowerFollowing(req.params.fid).then((followerFollowing: Follow) => res.json(followerFollowing));
