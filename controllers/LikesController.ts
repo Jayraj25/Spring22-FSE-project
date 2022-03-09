@@ -52,7 +52,8 @@ export default class LikesController implements LikeControllerI {
      * body formatted as JSON arrays containing the Likes objects
      */
     findAllTuitsLikedByUser = (req: Request, res: Response) => 
-        LikesController.likeDao.findAllTuitsLikedByUser(req.params.uid).then((likes: Likes[]) => res.json(likes));
+        LikesController.likeDao.findAllTuitsLikedByUser(req.params.uid)
+            .then((likes: Likes[]) => res.json(likes));
     
     /**
      * Retrieves all users from the database that liked by a particular tuit and returns an array of Likes.
@@ -61,7 +62,8 @@ export default class LikesController implements LikeControllerI {
      * body formatted as JSON arrays containing the Likes objects
      */
     findAllUsersThatLikedTuit = (req: Request, res: Response) => 
-        LikesController.likeDao.findAllUsersThatLikedTuit(req.params.tid).then((likes: Likes[]) => res.json(likes));
+        LikesController.likeDao.findAllUsersThatLikedTuit(req.params.tid)
+            .then((likes: Likes[]) => res.json(likes));
     
     /**
      * @param {Request} req Represents request from client, including parameters
@@ -72,7 +74,8 @@ export default class LikesController implements LikeControllerI {
      * database
      */
     userLikesTuit = (req: Request, res: Response) => 
-        LikesController.likeDao.userLikesTuit(req.params.tid, req.params.uid).then((likes: Likes) => res.json(likes));
+        LikesController.likeDao.userLikesTuit(req.params.tid, req.params.uid)
+            .then((likes: Likes) => res.json(likes));
     
     /**
      * @param {Request} req Represents request from client, including path
@@ -81,5 +84,6 @@ export default class LikesController implements LikeControllerI {
      * on whether deleting a like instance was successful or not
      */
     userUnlikesTuit = (req: Request, res: Response) => 
-        LikesController.likeDao.userUnlikesTuit(req.params.tid, req.params.uid).then((status) => res.json(status));
+        LikesController.likeDao.userUnlikesTuit(req.params.tid, req.params.uid)
+            .then((status) => res.json(status));
 }

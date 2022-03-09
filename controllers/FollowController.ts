@@ -60,7 +60,8 @@ export default class FollowController implements followControllerI {
      * database
      */
     userFollowsUser = (req: Request, res: Response) =>
-        FollowController.followDao.userFollowsUser(req.params.uid,req.params.userFollowedId).then((follow: Follow) => res.json(follow));
+        FollowController.followDao.userFollowsUser(req.params.uid,req.params.userFollowedId)
+            .then((follow: Follow) => res.json(follow));
     
     /**
      * Retrieves all users from the database that follow a particular user and returns an array of users.
@@ -69,16 +70,19 @@ export default class FollowController implements followControllerI {
      * body formatted as JSON arrays containing the follow objects
      */
     getFollowersList = (req: Request, res: Response) => 
-        FollowController.followDao.getFollowersList(req.params.uid).then((followers: Follow) => res.json(followers));
+        FollowController.followDao.getFollowersList(req.params.uid)
+            .then((followers: Follow) => res.json(followers));
     
     /**
-     * Retrieves all users from the database that are being followed by a particular user and returns an array of users.
+     * Retrieves all users from the database that are being followed by a particular
+     * user and returns an array of users.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the follow objects
      */
     getFollowingList = (req: Request, res: Response) => 
-        FollowController.followDao.getFollowingList(req.params.uid).then((following: Follow) => res.json(following));
+        FollowController.followDao.getFollowingList(req.params.uid)
+            .then((following: Follow) => res.json(following));
     
     /**
      * Retrieves all follow instance from the database and returns an array of follow instances.
@@ -87,7 +91,8 @@ export default class FollowController implements followControllerI {
      * body formatted as JSON arrays containing all the follow objects
      */
     getAllFollowersFollowing = (req: Request, res: Response) => {
-        FollowController.followDao.getAllFollowerFollowing().then((result: Follow[]) => res.json(result))
+        FollowController.followDao.getAllFollowerFollowing()
+            .then((result: Follow[]) => res.json(result))
     }
 
     /**
@@ -97,7 +102,8 @@ export default class FollowController implements followControllerI {
      * body formatted as JSON arrays containing the follow object
      */
     getFollowerFollowing = (req: Request, res: Response) => 
-        FollowController.followDao.getFollowerFollowing(req.params.fid).then((followerFollowing: Follow) => res.json(followerFollowing));
+        FollowController.followDao.getFollowerFollowing(req.params.fid)
+            .then((followerFollowing: Follow) => res.json(followerFollowing));
     
     /**
      * @param {Request} req Represents request from client, including path
@@ -107,5 +113,6 @@ export default class FollowController implements followControllerI {
      * on whether deleting a follow instance was successful or not
      */
     userUnfollowsUser = (req: Request, res: Response) =>
-        FollowController.followDao.userUnfollowsUser(req.params.uid,req.params.userUnfollowedId).then((status) => res.json(status));
+        FollowController.followDao.userUnfollowsUser(req.params.uid,req.params.userUnfollowedId)
+            .then((status) => res.json(status));
 }

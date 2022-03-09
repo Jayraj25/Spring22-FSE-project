@@ -58,17 +58,20 @@ export default class BookmarkController implements BookmarkControllerI {
      * database
      */
     userBookmarksTuit = (req: Request, res: Response) => {
-        BookmarkController.bookmarkDao.userBookmarksTuit(req.params.uid,req.params.tid).then((bookmark: Bookmarks) => res.json(bookmark));
+        BookmarkController.bookmarkDao.userBookmarksTuit(req.params.uid,req.params.tid)
+            .then((bookmark: Bookmarks) => res.json(bookmark));
     }
 
     /**
-     * Retrieves all bookmarks instance by a particular user from the database and returns an array of bookmarks instances.
+     * Retrieves all bookmarks instance by a particular user from the database and
+     * returns an array of bookmarks instances.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the bookmarks objects
      */
     getBookmarksList = (req: Request, res: Response) => {
-        BookmarkController.bookmarkDao.getBookmarksList(req.params.uid).then((bookmarks: Bookmarks[]) => res.json(bookmarks));
+        BookmarkController.bookmarkDao.getBookmarksList(req.params.uid)
+            .then((bookmarks: Bookmarks[]) => res.json(bookmarks));
     }
 
     /**
@@ -78,7 +81,8 @@ export default class BookmarkController implements BookmarkControllerI {
      * body formatted as JSON containing the bookmark objects
      */
     getBookmark = (req: Request, res: Response) => {
-        BookmarkController.bookmarkDao.getBookmark(req.params.bid).then((bookmarks: Bookmarks[]) => res.json(bookmarks));
+        BookmarkController.bookmarkDao.getBookmark(req.params.bid)
+            .then((bookmarks: Bookmarks[]) => res.json(bookmarks));
     }
 
     /**
@@ -99,6 +103,7 @@ export default class BookmarkController implements BookmarkControllerI {
      * on whether deleting a bookmark instance was successful or not
      */
      userUnbookmarksTuit = (req: Request, res: Response) => {
-        BookmarkController.bookmarkDao.userUnbookmarksTuit(req.params.uid,req.params.tid).then((status) => res.json(status));
+        BookmarkController.bookmarkDao.userUnbookmarksTuit(req.params.uid,req.params.tid)
+            .then((status) => res.json(status));
     }
 }

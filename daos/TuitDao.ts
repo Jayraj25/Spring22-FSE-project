@@ -86,5 +86,13 @@ export default class TuitDao implements TuitDaoI {
     async deleteTuit(tid: string): Promise<any> {
         return await TuitModel.deleteOne({_id: tid});
     }
-    
+
+    /**
+     * Removes tuit from the database.
+     * @param {string} content tuit that is to be deleted from the database.
+     * @returns Promise To be notified when tuit is removed from the database
+     */
+    async deleteTuitByContent(content: string): Promise<any> {
+        return await TuitModel.deleteOne({tuit: {$regex: content}});
+    }
 }

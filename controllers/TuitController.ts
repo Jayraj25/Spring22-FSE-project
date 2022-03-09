@@ -17,6 +17,7 @@ import Tuit from "../models/Tuit";
  *     <li>GET /api/users/:uid/tuits to retrieve tuits for a given user </li>
  *     <li>PUT /api/tuits/:tid to modify an individual tuit instance </li>
  *     <li>DELETE /api/tuits/:tid to remove a particular tuit instance</li>
+ *     <li>DELETE /api/tuits/deleteByContent/:content to remove particular tuit matching the content</li>
  * </ul>
  * @property {TuitDao} tuitDao Singleton DAO implementing tuit CRUD operations
  * @property {TuitController} tuitController Singleton controller implementing
@@ -44,6 +45,7 @@ export default class TuitController implements TuitControllerI {
             app.post('/api/users/:uid/tuits',TuitController.tuitController.createTuit);
             app.put('/api/tuits/:tid',TuitController.tuitController.updateTuit);
             app.delete('/api/tuits/:tid', TuitController.tuitController.deleteTuit);
+            app.delete('/api/tuits/deleteByContent/:content',TuitController.tuitController.deleteTuitByContent);
         }
         return TuitController.tuitController;
     }
@@ -65,7 +67,8 @@ export default class TuitController implements TuitControllerI {
      * body formatted as JSON arrays containing the tuit objects
      */
     findTuitsByUser = (req: Request, res: Response) => 
-        TuitController.tuitDao.findTuitsByUser(req.params.uid).then((tuits: Tuit[]) => res.json(tuits));
+        TuitController.tuitDao.findTuitsByUser(req.params.uid)
+            .then((tuits: Tuit[]) => res.json(tuits));
 
     /**
      * @param {Request} req Represents request from client, including path
@@ -74,7 +77,8 @@ export default class TuitController implements TuitControllerI {
      * body formatted as JSON containing the tuit that matches the user ID
      */
     findTuitById = (req: Request, res: Response) => 
-        TuitController.tuitDao.findTuitById(req.params.tid).then((tuits: Tuit) => res.json(tuits));
+        TuitController.tuitDao.findTuitById(req.params.tid)
+            .then((tuits: Tuit) => res.json(tuits));
 
     /**
      * @param {Request} req Represents request from client, including body
@@ -85,7 +89,8 @@ export default class TuitController implements TuitControllerI {
      * database
      */
     createTuit = (req: Request, res: Response) => 
-        TuitController.tuitDao.createTuit(req.params.uid, req.body).then((tuit: Tuit) => res.json(tuit));
+        TuitController.tuitDao.createTuit(req.params.uid, req.body)
+            .then((tuit: Tuit) => res.json(tuit));
 
     /**
      * @param {Request} req Represents request from client, including path
@@ -94,14 +99,26 @@ export default class TuitController implements TuitControllerI {
      * on whether updating a tuit was successful or not
      */
     updateTuit = (req: Request, res: Response) => 
-        TuitController.tuitDao.updateTuit(req.params.tid,req.body).then(status => res.json(status));
+        TuitController.tuitDao.updateTuit(req.params.tid,req.body)
+            .then(status => res.json(status));
 
     /**
      * @param {Request} req Represents request from client, including path
      * parameter tid identifying the primary key of the tuit to be removed
      * @param {Response} res Represents response to client, including status
-     * on whether deleting a user was successful or not
+     * on whether deleting a tuit was successful or not
      */
      deleteTuit = (req: Request, res: Response) => 
-     TuitController.tuitDao.deleteTuit(req.params.tid).then(status => res.json(status));
+     TuitController.tuitDao.deleteTuit(req.params.tid)
+         .then(status => res.json(status));
+
+    /**
+     * @param {Request} req Represents request from client, including path
+     * parameter content identifying the matching content of the tuit to be deleted
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting a tuit was successful or not
+     */
+     deleteTuitByContent = (req: Request, res: Response) =>
+         TuitController.tuitDao.deleteTuitByContent(req.params.content)
+             .then(status => res.json(status));
 }

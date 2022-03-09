@@ -15,6 +15,7 @@ import User from "../models/User";
  *     <li>GET /api/users/:uid to retrieve an individual user instance </li>
  *     <li>PUT /api/users to modify an individual user instance </li>
  *     <li>DELETE /api/users/:uid to remove a particular user instance</li>
+ *     <li>DELETE /api/users/username/:username/delete to remove a particular user instance by username</li>
  * </ul>
  * @property {UserDao} userDao Singleton DAO implementing user CRUD operations
  * @property {UserController} userController Singleton controller implementing
@@ -41,6 +42,8 @@ export default class UserController implements UserControllerI {
             app.get("/api/users/:uid", UserController.userController.findUserById);
             app.put("/api/users/:uid", UserController.userController.updateUser);
             app.delete("/api/users/:uid", UserController.userController.deleteUser);
+            app.get("/api/users/username/:username/delete", UserController.userController.deleteUsersByUsername);
+            app.post("/api/login", UserController.userController.login);
         }
         return UserController.userController;
     }
@@ -52,7 +55,8 @@ export default class UserController implements UserControllerI {
      * body formatted as JSON arrays containing the user objects
      */
     findAllUsers = (req: Request, res: Response) => 
-        UserController.userDao.findAllUsers().then((users:User[]) => res.json(users));
+        UserController.userDao.findAllUsers()
+            .then((users:User[]) => res.json(users));
 
     /**
      * Retrieves the user by their primary key
@@ -62,7 +66,8 @@ export default class UserController implements UserControllerI {
      * body formatted as JSON containing the user that matches the user ID
      */
     findUserById = (req: Request, res: Response) => 
-        UserController.userDao.findUserById(req.params.uid).then((users:User) => res.json(users));
+        UserController.userDao.findUserById(req.params.uid)
+            .then((users:User) => res.json(users));
     
     /**
      * Creates a new user instance
@@ -74,7 +79,8 @@ export default class UserController implements UserControllerI {
      * database
      */
     createUser = (req: Request, res: Response) => 
-        UserController.userDao.createUser(req.body).then(user => res.json(user));
+        UserController.userDao.createUser(req.body)
+            .then(user => res.json(user));
     
     /**
      * Modifies an existing user instance
@@ -84,7 +90,8 @@ export default class UserController implements UserControllerI {
      * on whether updating a user was successful or not
      */
     updateUser = (req: Request, res: Response) => 
-        UserController.userDao.updateUser(req.params.uid, req.body).then(status => res.json(status));
+        UserController.userDao.updateUser(req.params.uid, req.body)
+            .then(status => res.json(status));
 
     /**
      * Removes a user instance from the database
@@ -94,5 +101,14 @@ export default class UserController implements UserControllerI {
      * on whether deleting a user was successful or not
      */
      deleteUser = (req: Request, res: Response) => 
-     UserController.userDao.deleteUser(req.params.uid).then(status => res.json(status));
+     UserController.userDao.deleteUser(req.params.uid)
+         .then(status => res.json(status));
+
+    deleteUsersByUsername = (req: Request, res: Response) =>
+        UserController.userDao.deleteUsersByUsername(req.params.username)
+            .then(status => res.send(status));
+
+    login = (req: Request, res: Response) =>
+        UserController.userDao.findUserByCredentials(req.body.username, req.body.password)
+            .then(user => res.json(user));
 }

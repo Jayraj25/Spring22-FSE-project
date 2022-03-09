@@ -28,9 +28,12 @@ console.log("Up and running....");
 
 // connect to the database
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD + '@cluster0.h9vbo.mongodb.net/Tuiter?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD + '@cluster0.h9vbo.mongodb.net' +
+    '/Tuiter?retryWrites=true&w=majority');
 
 const app = express();
+const cors = require('cors')
+app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/hello', (req: Request, res: Response) =>

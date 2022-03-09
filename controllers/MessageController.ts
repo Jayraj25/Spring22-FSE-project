@@ -56,7 +56,8 @@ export default class MessageController implements MessageControllerI {
      * body formatted as JSON containing the new message object that was inserted.
      */
     sendMessage = (req: Request, res: Response) => {
-        MessageController.messageDao.sendMessage(req.params.u1id,req.params.u2id,req.body).then((message: Message) => res.json(message));
+        MessageController.messageDao.sendMessage(req.params.u1id,req.params.u2id,req.body)
+            .then((message: Message) => res.json(message));
     }
 
     /**
@@ -67,7 +68,8 @@ export default class MessageController implements MessageControllerI {
      * body formatted as JSON arrays containing the message objects
      */
     messageListSent = (req: Request, res: Response) => {
-        MessageController.messageDao.messageListSent(req.params.uid).then((messages: Message[]) => res.json(messages));
+        MessageController.messageDao.messageListSent(req.params.uid)
+            .then((messages: Message[]) => res.json(messages));
     }
 
     /**
@@ -78,7 +80,8 @@ export default class MessageController implements MessageControllerI {
      * body formatted as JSON arrays containing the message objects
      */
     messageListReceived = (req: Request, res: Response) => {
-        MessageController.messageDao.messageListReceived(req.params.uid).then((messages: Message[]) => res.json(messages));
+        MessageController.messageDao.messageListReceived(req.params.uid)
+            .then((messages: Message[]) => res.json(messages));
     }
 
     /**
@@ -88,7 +91,8 @@ export default class MessageController implements MessageControllerI {
      * on whether deleting a message was successful or not
      */
     deleteMessage = (req: Request, res: Response) => {
-        MessageController.messageDao.deleteMessage(req.params.uid,req.params.mid).then((status) => res.json(status));
+        MessageController.messageDao.deleteMessage(req.params.uid,req.params.mid)
+            .then((status) => res.json(status));
     }
 
     /**
@@ -97,7 +101,8 @@ export default class MessageController implements MessageControllerI {
      * body formatted as JSON arrays containing all the message objects
      */
     getAllMessages = (req: Request, res: Response) => {
-        MessageController.messageDao.getAllMessages().then((messages: Message[]) => res.json(messages));
+        MessageController.messageDao.getAllMessages()
+            .then((messages: Message[]) => res.json(messages));
     }
 
     /**
@@ -107,6 +112,7 @@ export default class MessageController implements MessageControllerI {
      * body formatted as JSON arrays containing the message object.
      */
      getMessage = (req: Request, res: Response) => {
-        MessageController.messageDao.getMessage(req.params.mid).then((messages: Message) => res.json(messages));
+        MessageController.messageDao.getMessage(req.params.mid)
+            .then((messages: Message) => res.json(messages));
     }
 }
