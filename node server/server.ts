@@ -28,13 +28,26 @@ console.log("Up and running....");
 
 // connect to the database
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD + '@cluster0.h9vbo.mongodb.net' +
-    '/Tuiter?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD
+    + '@cluster0.h9vbo.mongodb.net' + '/Tuiter?retryWrites=true&w=majority');
 
+const session = require("express-session");
 const app = express();
 const cors = require('cors')
 app.use(cors());
 app.use(bodyParser.json());
+let sess = {
+    secret: process.env.SECRET,
+    cookie: {
+        secure: false
+    }
+}
+
+if (process.env.ENV === 'PRODUCTION') {
+    app.set('trust proxy',1) // trust first proxy
+    sess.cookie.secure = true // server secure cookies
+}
+
 
 app.get('/hello', (req: Request, res: Response) =>
     res.send('Hello World!'));
