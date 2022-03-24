@@ -23,6 +23,6 @@ const AuthenticationController = (app: Express) => {
             res.json(insertedUser);
         }
     }
-    app.post("/api/auth/signup", signUp);
+    app.post("/api/auth/register", signUp);
 }
 export default AuthenticationController;
