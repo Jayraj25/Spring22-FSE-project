@@ -40,12 +40,28 @@ export default class LikesDao implements LikeDaoI {
 
     /**
      * Uses LikeModel to retrieve all tuits that are liked a particular user.
-     * @param {string} uid Users's primary key
+     * @param {string} uid User's primary key
      * @returns Promise To be notified when the tuits are retrieved from
      * database
      */
     async findAllTuitsLikedByUser(uid: String): Promise<Likes[]> {
-        return await LikeModel.find({likedBy: uid}).populate("tuit").exec();
+        return LikeModel.find({likedBy: uid}).populate({
+            path: "tuit",
+            populate: {
+                path: "createdBy",
+                model: "UserModel",
+            }
+        }).exec();
+    }
+
+    // find user likes tuits
+    async findUserLikesTuit(uid: String, tid: String): Promise<any> {
+        return LikeModel.findOne({tuit: tid, likedBy: uid});
+    }
+
+    //count number of liked tuits
+    async countLikes(tid: String): Promise<any> {
+        return LikeModel.count({tuit: tid});
     }
 
     /**

@@ -44,7 +44,7 @@ export default class TuitDao implements TuitDaoI {
      * database
      */
     async findTuitsByUser(uid: string): Promise<Tuit[]> {
-        return await TuitModel.find({createdBy: uid});
+        return TuitModel.find({createdBy: uid}).populate("createdBy").exec();
     }
 
     /**
@@ -75,7 +75,13 @@ export default class TuitDao implements TuitDaoI {
      * @returns Promise To be notified when tuit is updated in the database
      */
     async updateTuit(tid: string, tuit: Tuit): Promise<any> {
-        return await TuitModel.updateOne({_id: tid},{$set: tuit});
+        return TuitModel.updateOne({_id: tid}, {$set: tuit});
+    }
+
+    // update likes count
+    async updateLikes(tid: string, newStats: any): Promise<any> {
+        console.log("stats: " + newStats);
+        return TuitModel.updateOne({_id: tid}, {$set: {stats: newStats}});
     }
 
     /**
@@ -84,7 +90,7 @@ export default class TuitDao implements TuitDaoI {
      * @returns Promise To be notified when tuit is removed from the database
      */
     async deleteTuit(tid: string): Promise<any> {
-        return await TuitModel.deleteOne({_id: tid});
+        return TuitModel.deleteOne({_id: tid});
     }
 
     /**
@@ -93,6 +99,6 @@ export default class TuitDao implements TuitDaoI {
      * @returns Promise To be notified when tuit is removed from the database
      */
     async deleteTuitByContent(content: string): Promise<any> {
-        return await TuitModel.deleteOne({tuit: {$regex: content}});
+        return TuitModel.deleteOne({tuit: {$regex: content}});
     }
 }
