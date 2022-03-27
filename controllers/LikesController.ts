@@ -6,7 +6,6 @@ import LikesDao from "../daos/LikesDao";
 import LikeControllerI from "../interfaces/LikeControllerI";
 import Likes from "../models/Likes";
 import TuitDao from "../daos/TuitDao";
-import TuitController from "./TuitController";
 
 /**
  * @class LikesController Implements RESTful Web service API for likes resource.
@@ -101,6 +100,7 @@ export default class LikesController implements LikeControllerI {
             .then((status) => res.json(status));
 
     /**
+     * update likes when user toggles the like button.
      * @param {Request} req Represents request from client, including the
      * path parameters uid and tid representing the user that is liking the tuit
      * and the tuit being liked
