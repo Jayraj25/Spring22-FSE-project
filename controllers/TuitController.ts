@@ -66,9 +66,16 @@ export default class TuitController implements TuitControllerI {
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the tuit objects
      */
-    findTuitsByUser = (req: Request, res: Response) => 
-        TuitController.tuitDao.findTuitsByUser(req.params.uid)
+    findTuitsByUser = (req: Request, res: Response) => {
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        // @ts-ignore
+        // console.log(req.session['profile']);
+        TuitController.tuitDao.findTuitsByUser(userId)
             .then((tuits: Tuit[]) => res.json(tuits));
+        // TuitController.tuitDao.findTuitsByUser(req.params.uid)
+        //     .then((tuits: Tuit[]) => res.json(tuits));
+    }
 
     /**
      * @param {Request} req Represents request from client, including path
@@ -88,9 +95,16 @@ export default class TuitController implements TuitControllerI {
      * body formatted as JSON containing the new tuit that was inserted in the
      * database
      */
-    createTuit = (req: Request, res: Response) => 
-        TuitController.tuitDao.createTuit(req.params.uid, req.body)
+    createTuit = (req: Request, res: Response) => {
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        // let userId = req.session['profile']._id;
+        console.log(userId);
+        // @ts-ignore
+        // console.log(req.session['profile']);
+        TuitController.tuitDao.createTuit(userId, req.body)
             .then((tuit: Tuit) => res.json(tuit));
+    }
 
     /**
      * @param {Request} req Represents request from client, including path

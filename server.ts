@@ -21,6 +21,7 @@ import LikesController from './controllers/LikesController';
 import FollowController from './controllers/FollowController';
 import BookmarkController from './controllers/BookmarkController';
 import MessageController from './controllers/MessageController';
+import AuthenticationController from "./controllers/AuthenticationController";
 
 require("dotenv").config({ path: "./variables.env"});
 // console.log(process.env.DB_PASSWORD);
@@ -28,12 +29,32 @@ console.log("Up and running....");
 
 // connect to the database
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD + '@cluster0.h9vbo.mongodb.net' +
-    '/Tuiter?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD
+    + '@cluster0.h9vbo.mongodb.net' + '/Tuiter?retryWrites=true&w=majority');
 
-const app = express();
+const session = require("express-session");
 const cors = require('cors')
-app.use(cors());
+const app = express();
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000'
+}));
+
+let sess = {
+    secret: process.env.SECRET,
+    saveUninitialized: true,
+    resave: true,
+    cookie: {
+        secure: false
+    }
+}
+
+if (process.env.ENV === 'PRODUCTION') {
+    app.set('trust proxy',1) // trust first proxy
+    sess.cookie.secure = true // server secure cookies
+}
+
+app.use(session(sess))
 app.use(bodyParser.json());
 
 app.get('/hello', (req: Request, res: Response) =>
@@ -49,6 +70,7 @@ const likesController = LikesController.getInstance(app);
 const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
+AuthenticationController(app);
 
 /**
  * Start a server listening at port 4000 locally
