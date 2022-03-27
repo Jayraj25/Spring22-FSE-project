@@ -84,6 +84,12 @@ export default class TuitDao implements TuitDaoI {
         return TuitModel.updateOne({_id: tid}, {$set: {stats: newStats}});
     }
 
+    //update dislikes count
+    async updateDislikes(tid: string, newStats: any): Promise<any> {
+        console.log("stats: " + newStats);
+        return TuitModel.updateOne({_id: tid}, {$set: {stats: newStats}});
+    }
+
     /**
      * Removes tuit from the database.
      * @param {string} tid Primary key of tuit that is to be deleted from the database.

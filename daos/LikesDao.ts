@@ -5,6 +5,8 @@
 import LikeDaoI from "../interfaces/LikeDaoI";
 import Likes from "../models/Likes";
 import LikeModel from "../mongoose/LikeModel";
+import DislikeModel from "../mongoose/DislikeModel";
+import {Dislike} from "../models/Dislikes";
 
 /**
  * @class LikesDao Implements Data Access Object managing data storage
@@ -81,6 +83,6 @@ export default class LikesDao implements LikeDaoI {
      * @returns Promise To be notified when the like is removed from the database.
      */
     async userUnlikesTuit(tid: String, uid: String): Promise<any> {
-        return await LikeModel.deleteOne({tuit: tid, likedBy: uid});
+        return LikeModel.deleteOne({tuit: tid, likedBy: uid});
     }
 }
