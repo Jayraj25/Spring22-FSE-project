@@ -42,7 +42,7 @@ app.use(cors({
 }));
 
 let sess = {
-    secret: process.env.SECRET,
+    secret: "keyboard cat",
     saveUninitialized: true,
     resave: true,
     cookie: {
