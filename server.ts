@@ -38,7 +38,7 @@ const cors = require('cors')
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: 'https://quizzical-mcclintock-e40782.netlify.app'
 }));
 
 let sess = {
