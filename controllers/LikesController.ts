@@ -22,12 +22,13 @@ import TuitDao from "../daos/TuitDao";
  * RESTful Web service API
  */
 export default class LikesController implements LikeControllerI {
-    
+
     private static likeDao: LikesDao = LikesDao.getInstance();
     private static likesController: LikesController | null = null;
     private static tuitDao: TuitDao = TuitDao.getInstance();
 
-    private constructor() {}
+    private constructor() {
+    }
 
     /**
      * Creates singleton controller instance
@@ -35,17 +36,17 @@ export default class LikesController implements LikeControllerI {
      * @return LikesController
      */
     public static getInstance = (app: Express): LikesController => {
-        if(this.likesController == null) {
+        if (this.likesController == null) {
             this.likesController = new LikesController();
 
             //Restful User Web service API
-            app.post("/api/users/:uid/likes/:tid", this.likesController.userLikesTuit);
+            // app.post("/api/users/:uid/likes/:tid", this.likesController.userLikesTuit);
             app.get("/api/users/:uid/likes", this.likesController.findAllTuitsLikedByUser);
             app.get("/api/tuits/:tid/likes", this.likesController.findAllUsersThatLikedTuit);
             app.put("/api/users/:uid/likes/:tid", this.likesController.userTogglesTuitLikes);
             app.delete("/api/users/:uid/likes/:tid", this.likesController.userUnlikesTuit);
         }
-    return this.likesController;
+        return this.likesController;
     }
 
     /**
@@ -59,24 +60,36 @@ export default class LikesController implements LikeControllerI {
         // @ts-ignore
         const profile = req.session["profile"];
         const userId = uid === "me" && profile ? profile._id : uid;
-        LikesController.likeDao.findAllTuitsLikedByUser(userId)
-            .then((likes: Likes[]) => {
-                const likesNonNullTuits = likes.filter(like => like.tuit);
-                const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
-                res.json(tuitsFromLikes);
-            });
+        if (userId === "me" && !profile) {
+            LikesController.tuitDao.findAllTuits().then(tuits => res.json(tuits));
+            // res.sendStatus(503);
+            // return;
+        } else {
+            LikesController.likeDao.findAllTuitsLikedByUser(userId)
+                .then((likes: Likes[]) => {
+                    const likesNonNullTuits = likes.filter(like => like.tuit);
+                    const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
+                    res.json(tuitsFromLikes);
+                });
+        }
+        // LikesController.likeDao.findAllTuitsLikedByUser(userId)
+        //         .then((likes: Likes[]) => {
+        //             const likesNonNullTuits = likes.filter(like => like.tuit);
+        //             const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
+        //             res.json(tuitsFromLikes);
+        //         });
     }
-    
+
     /**
      * Retrieves all users from the database that liked by a particular tuit and returns an array of Likes.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the Likes objects
      */
-    findAllUsersThatLikedTuit = (req: Request, res: Response) => 
+    findAllUsersThatLikedTuit = (req: Request, res: Response) =>
         LikesController.likeDao.findAllUsersThatLikedTuit(req.params.tid)
             .then((likes: Likes[]) => res.json(likes));
-    
+
     /**
      * @param {Request} req Represents request from client, including parameters
      * containing user id and tuit id for the new like instance to be created in the
@@ -85,10 +98,10 @@ export default class LikesController implements LikeControllerI {
      * body formatted as JSON containing the new like instance that was inserted in the
      * database
      */
-    userLikesTuit = (req: Request, res: Response) => 
+    userLikesTuit = (req: Request, res: Response) =>
         LikesController.likeDao.userLikesTuit(req.params.tid, req.params.uid)
             .then((likes: Likes) => res.json(likes));
-    
+
     /**
      * @param {Request} req Represents request from client, including path
      * parameter tid and uid identifying the primary key of the tuit and user respectively to be removed
@@ -115,21 +128,23 @@ export default class LikesController implements LikeControllerI {
         const tid = req.params.tid;
         // @ts-ignore
         const userId = uid === "me" && req.session['profile'] ? req.session['profile']._id : uid;
-        try {
-            const userAlreadyLikedTuit = await likeDao.findUserLikesTuit(userId, tid);
-            const howManyLikes = await likeDao.countLikes(tid);
-            let tuit = await tuitDao.findTuitById(tid);
-            if (userAlreadyLikedTuit) {
-                await likeDao.userUnlikesTuit(tid, userId);
-                tuit.stats.likes = howManyLikes - 1;
-            } else {
-                await likeDao.userLikesTuit(tid, userId);
-                tuit.stats.likes = howManyLikes + 1;
+        // @ts-ignore
+            try {
+                const userAlreadyLikedTuit = await likeDao.findUserLikesTuit(userId, tid);
+                const howManyLikes = await likeDao.countLikes(tid);
+                let tuit = await tuitDao.findTuitById(tid);
+                if (userAlreadyLikedTuit) {
+                    await likeDao.userUnlikesTuit(tid, userId);
+                    tuit.stats.likes = howManyLikes - 1;
+                } else {
+                    await likeDao.userLikesTuit(tid, userId);
+                    tuit.stats.likes = howManyLikes + 1;
+                }
+                await tuitDao.updateLikes(tid, tuit.stats);
+                // res.send(tuit);
+                res.sendStatus(200);
+            } catch (error) {
+                res.sendStatus(404);
             }
-            await tuitDao.updateLikes(tid, tuit.stats);
-            res.sendStatus(200);
-        } catch (error) {
-            res.sendStatus(404);
-        }
     }
 }

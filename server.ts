@@ -24,7 +24,7 @@ import MessageController from './controllers/MessageController';
 import AuthenticationController from "./controllers/AuthenticationController";
 import DislikesController from "./controllers/DislikesController";
 
-require("dotenv").config({ path: "./variables.env"});
+require("dotenv").config({ path: "./.env"});
 // console.log(process.env.DB_PASSWORD);
 console.log("Up and running....");
 
@@ -38,14 +38,17 @@ const cors = require('cors')
 const app = express();
 app.use(cors({
     credentials: true,
-    origin: 'https://quizzical-mcclintock-e40782.netlify.app'
+    origin: process.env.CORS_ORIGIN,
+    // origin: 'https://quizzical-mcclintock-e40782.netlify.app'
 }));
-
+console.log(process.env.SESSION_SECRET);
+console.log(process.env.CORS_ORIGIN);
 let sess = {
-    secret: "keyboard cat",
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     resave: true,
     cookie: {
+        sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
         secure: false
     }
 }
