@@ -1,3 +1,6 @@
+/**
+ * @file Declares DAO interface managing Data Storage Access for dislikes.
+ */
 import {Dislike} from "../models/Dislikes";
 
 export default interface DislikeDaoI {

@@ -11,10 +11,9 @@ import TuitDao from "../daos/TuitDao";
  * @class LikesController Implements RESTful Web service API for likes resource.
  * Defines the following HTTP endpoints:
  * <ul>
- *     <li>POST /api/users/:uid/likes/:tid to create a new likes instance for
- *     a given user and tuit</li>
  *     <li>GET /api/users/:uid/likes to retrieve all the tuit instances liked by a user</li>
  *     <li>GET /api/tuits/:tid/likes to retrieve all users for a given tuit</li>
+ *     <li>PUT /api/users/:uid/likes/:tid to update a likes instance for a given user and tuit</li>
  *     <li>DELETE /api/users/:uid/likes/:tid to remove a particular like instance</li>
  * </ul>
  * @property {LikesDao} likeDao Singleton DAO implementing likes CRUD operations
@@ -72,12 +71,6 @@ export default class LikesController implements LikeControllerI {
                     res.json(tuitsFromLikes);
                 });
         }
-        // LikesController.likeDao.findAllTuitsLikedByUser(userId)
-        //         .then((likes: Likes[]) => {
-        //             const likesNonNullTuits = likes.filter(like => like.tuit);
-        //             const tuitsFromLikes = likesNonNullTuits.map(like => like.tuit);
-        //             res.json(tuitsFromLikes);
-        //         });
     }
 
     /**

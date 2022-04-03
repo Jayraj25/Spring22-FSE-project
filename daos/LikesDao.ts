@@ -7,7 +7,6 @@ import Likes from "../models/Likes";
 import LikeModel from "../mongoose/LikeModel";
 import DislikeModel from "../mongoose/DislikeModel";
 import {Dislike} from "../models/Dislikes";
-
 /**
  * @class LikesDao Implements Data Access Object managing data storage
  * of Likes
@@ -56,12 +55,20 @@ export default class LikesDao implements LikeDaoI {
         }).exec();
     }
 
-    // find user likes tuits
+    /**
+     * Uses LikeModel to check if the user has already liked the tuit.
+     * @param uid User's primary key
+     * @param tid Tuit's primary key
+     */
     async findUserLikesTuit(uid: String, tid: String): Promise<any> {
         return LikeModel.findOne({tuit: tid, likedBy: uid});
     }
 
-    //count number of liked tuits
+
+    /**
+     * Uses LikeModel to count the number of likes for a particular tuit.
+     * @param tid Tuit's primary key
+     */
     async countLikes(tid: String): Promise<any> {
         return LikeModel.count({tuit: tid});
     }

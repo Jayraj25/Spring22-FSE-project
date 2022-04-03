@@ -10,7 +10,7 @@ import DislikeDaoI from "../interfaces/DislikeDaoI";
 /**
  * @class DislikesDao Implements Data Access Object managing data storage
  * of Dislikes
- * @property {DislikesDao} dislikeDao Private single instance of LikeDao
+ * @property {DislikesDao} dislikeDao Private single instance of DislikeDao
  */
 export default class DislikesDao implements DislikeDaoI {
 
@@ -29,7 +29,12 @@ export default class DislikesDao implements DislikeDaoI {
 
     private constructor() {}
 
-    //find all tuits disliked by user
+    /**
+     * Uses DislikeModel to retrieve all tuits that are disliked a particular user.
+     * @param {string} uid User's primary key
+     * @returns Promise To be notified when the tuits are retrieved from
+     * database
+     */
     async findAllTuitsDislikedByUser(uid: String): Promise<Dislike[]> {
         return DislikeModel.find({dislikedBy: uid}).populate({
             path: "tuit",
@@ -40,17 +45,29 @@ export default class DislikesDao implements DislikeDaoI {
         }).exec();
     }
 
-    //find all users that disliked a particular tuit
+    /**
+     * Uses DislikeModel to retrieve all users that disliked a particular tuit.
+     * @param {string} tid primary key of tuit.
+     * @returns Promise To be notified when the users are retrieved from
+     * database
+     */
     async findAllUsersThatDislikedTuit(tid: String): Promise<Dislike[]> {
         return DislikeModel.find({tuit: tid}).populate("dislikedBy").exec();
     }
 
-    //find user dislikes tuits
+    /**
+     * Uses DislikeModel to check if a user has already disliked a particular tuit.
+     * @param uid User's primary key
+     * @param tid Tuit's primary key
+     */
     async findUserDislikesTuit(uid: String, tid: String): Promise<any> {
         return DislikeModel.findOne({tuit: tid, dislikedBy: uid});
     }
 
-    //count number of disliked tuits
+    /**
+     * Uses DislikeModel to count the number of dislikes for a particular tuit.
+     * @param tid Tuit's primary key
+     */
     async countDislikes(tid: String): Promise<any> {
         return DislikeModel.count({tuit: tid});
     }
