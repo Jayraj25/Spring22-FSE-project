@@ -10,7 +10,7 @@ import Poll from "../models/Poll";
  * @property {string[]} pollOptions The poll options provided by the user.
  * @property {Date} postedOn Time when the user polled.
  * @property {User} createdBy The user who created the poll.
- * @property {closed} closed The poll os open or closed.
+ * @property {Boolean} closed The poll os open or closed.
  */
 const PollSchema = new mongoose.Schema<Poll>({
     pollQuestion: {type: String,required: true},
