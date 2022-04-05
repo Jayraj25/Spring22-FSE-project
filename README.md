@@ -1,4 +1,4 @@
-# fse-node-project
+# fse-node-project middle tier
 
 To run the project in development mode, run the following command:
 
