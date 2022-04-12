@@ -23,6 +23,7 @@ import BookmarkController from './controllers/BookmarkController';
 import MessageController from './controllers/MessageController';
 import AuthenticationController from "./controllers/AuthenticationController";
 import DislikesController from "./controllers/DislikesController";
+import PollResponseController from "./controllers/PollResponseController";
 
 require("dotenv").config({ path: "./.env"});
 // console.log(process.env.DB_PASSWORD);
@@ -30,8 +31,10 @@ console.log("Up and running....");
 
 // connect to the database
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD
-    + '@cluster0.h9vbo.mongodb.net' + '/Tuiter?retryWrites=true&w=majority');
+//mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD
+//    + '@cluster0.h9vbo.mongodb.net' + '/Tuiter?retryWrites=true&w=majority');
+const mongoUN = 'tuit'
+mongoose.connect(`mongodb+srv://tuit:`+process.env.DB_PASSWORD+`@cluster0.g4fpb.mongodb.net/tuiter?retryWrites=true&w=majority`);
 
 const session = require("express-session");
 const cors = require('cors')
@@ -76,6 +79,7 @@ const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 AuthenticationController(app);
+const pollResponseController = PollResponseController.getInstance(app);
 
 /**
  * Start a server listening at port 4000 locally
