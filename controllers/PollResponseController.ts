@@ -14,6 +14,7 @@ import PollResponse from "../models/PollResponse";
  *     a given user and poll</li>
  *     <li>GET /api/users/:uid/pollsresponded to retrieve a particular pollResponse instances from a specified user</li>
  *     <li>GET /api/usersrepsonded/polls/:pid to retrieve all users pollResponse for certain poll </li>
+ *     <li>GET /api/polls/:pid/ to retrieve the pollResponse instances for a given poll id</li>
  *     <li>PUT /api/users/:uid/polls/:pid to modify an individual pollResponse instance </li>
  *     <li>DELETE /api/users/:uid/deleteresponse/polls/:pid to remove a particular pollResponse instance from
  *     specified user and poll</li>
@@ -40,6 +41,7 @@ export default class PollResponseController implements PollResponseControllerI {
             //Restful User Web service API
             app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollResponsesByUser);
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyPollResponse);
+            app.get('/api/polls/:pid',PollResponseController.pollResponseController.findPollResponseByPollId);
             app.post('/api/user/:uid/response/polls/:pid',PollResponseController.pollResponseController.createPollResponse);
             app.put('/api/pollResponses/:tid',PollResponseController.pollResponseController.updatePollResponse);
             app.delete('/api/users/:uid/polls/:pid', PollResponseController.pollResponseController.deletePollResponse);
@@ -71,6 +73,16 @@ export default class PollResponseController implements PollResponseControllerI {
      */
     findAllUsersReplyPollResponse = (req: Request, res: Response) =>
         PollResponseController.pollResponseDao.findAllUsersReplyPollResponse(req.params.pid)
+            .then((pollResponses: PollResponse) => res.json(pollResponses));
+
+    /**
+     * @param {Request} req Represents request from client, including path
+     * parameter pid identifying the primary key of the pollResponse to be retrieved
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the pollResponse that matches the poll ID
+     */
+    findPollResponseByPollId = (req: Request, res: Response) =>
+        PollResponseController.pollResponseDao.findPollResponseByPollId(req.params.pid)
             .then((pollResponses: PollResponse) => res.json(pollResponses));
 
     /**
@@ -110,6 +122,5 @@ export default class PollResponseController implements PollResponseControllerI {
      deletePollResponse = (req: Request, res: Response) =>
      PollResponseController.pollResponseDao.deletePollResponse(req.params.tid,req.params.uid)
          .then(status => res.json(status));
-
 
 }
