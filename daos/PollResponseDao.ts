@@ -31,6 +31,7 @@ export default class PollResponseDao implements PollResponseDaoI {
     /**
      * Inserts pollResponse instance into the database.
      * @param {string} uid User's primary key
+     * @param {string} pid Poll's primary key
      * @param {PollResponse} pollResponse Instance to be inserted in the database.
      * @returns Promise To be notified when the pollResponse is inserted in the database.
      */
@@ -73,7 +74,8 @@ export default class PollResponseDao implements PollResponseDaoI {
 
     /**
      * Removes pollResponse from the database.
-     * @param {string} tid Primary key of pollResponse that is to be deleted from the database.
+     * @param {string} pid Primary key of pollResponse that is to be deleted from the database.
+     * @param {string} uid Primary key of user
      * @returns Promise To be notified when pollResponse is removed from the database
      */
     async deletePollResponse(pid: string, uid: string): Promise<any> {
@@ -81,4 +83,13 @@ export default class PollResponseDao implements PollResponseDaoI {
     }
 
 
+    /**
+     * Uses PollResponseModel to retrieve all pollResponses documents from pollResponses collections.
+     * @param {string} pid Poll's primary key
+     * @returns Promise To be notified when the pollResponses are retrieved from
+     * database
+     */
+    async findPollResponseByPollId(pid: string): Promise<any> {
+        return PollResponseModel.findById(pid);
+    }
 }

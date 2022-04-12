@@ -120,7 +120,7 @@ export default class PollResponseController implements PollResponseControllerI {
      * on whether deleting a pollResponse was successful or not
      */
     deletePollResponse = (req: Request, res: Response) =>
-        PollResponseController.pollResponseDao.deletePollResponse(req.params.tid,req.params.uid)
+    PollResponseController.pollResponseDao.deletePollResponse(req.params.tid,req.params.uid)
             .then(status => res.json(status));
 
 }
