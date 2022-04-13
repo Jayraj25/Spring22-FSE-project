@@ -15,7 +15,7 @@ import PollResponse from "../models/PollResponse";
  *     <li>GET /api/users/:uid/pollsresponded to retrieve a particular pollResponse instances from a specified user</li>
  *     <li>GET /api/usersrepsonded/polls/:pid to retrieve all users pollResponse for certain poll </li>
  *     <li>GET /api/polls/:pid/ to retrieve the pollResponse instances for a given poll id</li>
- *     <li>PUT /api/users/:uid/polls/:pid to modify an individual pollResponse instance </li>
+ *     <li>PUT /api/users/:uid/poll/:pid to modify an individual pollResponse instance </li>
  *     <li>DELETE /api/users/:uid/deleteresponse/polls/:pid to remove a particular pollResponse instance from
  *     specified user and poll</li>
  * </ul>
@@ -43,7 +43,7 @@ export default class PollResponseController implements PollResponseControllerI {
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyPollResponse);
             app.get('/api/polls/:pid',PollResponseController.pollResponseController.findPollResponseByPollId);
             app.post('/api/user/:uid/response/polls/:pid',PollResponseController.pollResponseController.createPollResponse);
-            app.put('/api/pollResponses/:tid',PollResponseController.pollResponseController.updatePollResponse);
+            app.put('/api/users/:uid/poll/:pid',PollResponseController.pollResponseController.updatePollResponse);
             app.delete('/api/users/:uid/polls/:pid', PollResponseController.pollResponseController.deletePollResponse);
         }
         return PollResponseController.pollResponseController;
@@ -110,7 +110,7 @@ export default class PollResponseController implements PollResponseControllerI {
      * on whether updating a pollResponse was successful or not
      */
     updatePollResponse = (req: Request, res: Response) =>
-        PollResponseController.pollResponseDao.updatePollResponse(req.params.uid,req.params.tid,req.body)
+        PollResponseController.pollResponseDao.updatePollResponse(req.params.uid,req.params.pid,req.body)
             .then(status => res.json(status));
 
     /**
@@ -120,7 +120,7 @@ export default class PollResponseController implements PollResponseControllerI {
      * on whether deleting a pollResponse was successful or not
      */
     deletePollResponse = (req: Request, res: Response) =>
-    PollResponseController.pollResponseDao.deletePollResponse(req.params.tid,req.params.uid)
+    PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,req.params.uid)
             .then(status => res.json(status));
 
 }

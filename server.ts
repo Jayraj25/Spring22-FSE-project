@@ -25,6 +25,7 @@ import MessageController from './controllers/MessageController';
 import AuthenticationController from "./controllers/AuthenticationController";
 import DislikesController from "./controllers/DislikesController";
 import PollController from "./controllers/PollController";
+import PollResponseController from "./controllers/PollResponseController";
 
 require("dotenv").config({ path: "./.env"});
 // console.log(process.env.DB_PASSWORD);
@@ -77,6 +78,7 @@ const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
 const pollController = PollController.getInstance(app);
+const pollResponseController = PollResponseController.getInstance(app);
 AuthenticationController(app);
 
 /**

@@ -53,12 +53,12 @@ export default class PollResponseDao implements PollResponseDaoI {
 
     /**
      * Uses PollResponseModel to retrieve pollResponse documents by id from pollResponses collections.
-     * @param {string} pid PollResponses' primary key
+     * @param {string} pid Poll's primary key
      * @returns Promise To be notified when the pollResponses are retrieved from
      * database
      */
     async findAllUsersReplyPollResponse(pid: string): Promise<any> {
-        return await PollResponseModel.findById(pid).populate("respondedBy").exec();
+        return await PollResponseModel.find({pollId: pid}).populate("respondedBy").exec();
     }
 
     /**
@@ -69,17 +69,19 @@ export default class PollResponseDao implements PollResponseDaoI {
      * @returns Promise To be notified when pollResponse is updated in the database
      */
     async updatePollResponse(uid: string ,pid: string ,pollResponse: PollResponse): Promise<any> {
-        return PollResponseModel.updateOne({_id: pid, respondedBy: uid}, {$set: pollResponse});
+        console.log(pollResponse)
+
+        return PollResponseModel.updateOne({pollId: pid, respondedBy: uid}, {$set: pollResponse});
     }
 
     /**
      * Removes pollResponse from the database.
-     * @param {string} pid Primary key of pollResponse that is to be deleted from the database.
+     * @param {string} pid Primary key of poll that is to be deleted from the database.
      * @param {string} uid Primary key of user
      * @returns Promise To be notified when pollResponse is removed from the database
      */
     async deletePollResponse(pid: string, uid: string): Promise<any> {
-        return PollResponseModel.deleteOne({_id: pid, respondedBy:uid});
+        return PollResponseModel.deleteOne({pollId: pid, respondedBy:uid});
     }
 
 
@@ -90,6 +92,6 @@ export default class PollResponseDao implements PollResponseDaoI {
      * database
      */
     async findPollResponseByPollId(pid: string): Promise<any> {
-        return PollResponseModel.findById(pid);
+        return PollResponseModel.find({pollId:pid});
     }
 }
