@@ -30,5 +30,11 @@ export default class PollDao implements PollDaoI {
     }
 
 
-
+    /**
+     * Finds all polls.
+     * @returns Promise To be notified when the polls are found.
+     */
+    async getAllPolls(): Promise<Poll[]> {
+        return PollModel.find();
+    }
 }

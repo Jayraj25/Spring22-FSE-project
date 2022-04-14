@@ -11,6 +11,7 @@ import PollDao from "../daos/PollDao";
  * Defines the following HTTP endpoints:
  * <ul>
  *     <li>POST /api/users/:uid/creates/polls to create a new poll instance for a given user</li>
+ *     <li>GET /api/polls to retrieve all poll instances</li>
  * </ul>
  * @property {PollDao} pollDao Singleton DAO implementing poll CRUD operations
  * @property {PollController} pollController Singleton controller implementing
@@ -33,6 +34,7 @@ export default class PollController implements PollControllerI {
 
             //Restful User Web service API
             app.post('/api/users/:uid/creates/polls',PollController.pollController.createPoll);
+            app.get('/api/polls',PollController.pollController.getAllPolls);
 
         }
         return PollController.pollController;
@@ -57,6 +59,17 @@ export default class PollController implements PollControllerI {
         // console.log(req.session['profile']);
         PollController.pollDao.createPoll(userId, req.body)
             .then((poll: Poll) => res.json(poll));
+    }
+
+    /**
+     * Retrieves all polls from the database and returns an array of polls.
+     * @param req Represents request from client
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the tuit objects
+     */
+    getAllPolls = (req: Request, res: Response) => {
+        PollController.pollDao.getAllPolls()
+            .then((poll: Poll[]) => res.json(poll));
     }
 
 

@@ -26,6 +26,7 @@ import AuthenticationController from "./controllers/AuthenticationController";
 import DislikesController from "./controllers/DislikesController";
 import PollController from "./controllers/PollController";
 
+
 require("dotenv").config({ path: "./.env"});
 // console.log(process.env.DB_PASSWORD);
 console.log("Up and running....");

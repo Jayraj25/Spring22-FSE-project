@@ -6,5 +6,5 @@ import Poll from "../models/Poll";
 
 export default interface PollDaoI {
     createPoll(uid: string, poll: Poll): Promise<Poll>;
-
+    getAllPolls(): Promise<Poll[]>;
 }
