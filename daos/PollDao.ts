@@ -1,6 +1,7 @@
 import PollDaoI from "../interfaces/PollDaoI";
 import Poll from "../models/Poll";
 import PollModel from "../mongoose/PollModel";
+import Any = jasmine.Any;
 
 
 export default class PollDao implements PollDaoI {
@@ -36,5 +37,14 @@ export default class PollDao implements PollDaoI {
      */
     async getAllPolls(): Promise<Poll[]> {
         return PollModel.find();
+    }
+
+    /**
+     * Finds a poll by its primary key.
+     * @param {string} id Poll's primary key
+     * @returns Promise To be notified when the poll is found.
+     */
+    async getPollById(id: string): Promise<any> {
+        return PollModel.findById(id);
     }
 }

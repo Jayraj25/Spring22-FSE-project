@@ -7,4 +7,5 @@ import { Request, Response } from "express";
 export default interface PollControllerI {
     createPoll(req: Request, res: Response): void;
     getAllPolls(req: Request, res: Response): void;
+    getPollById(req: Request, res: Response): void;
 }
