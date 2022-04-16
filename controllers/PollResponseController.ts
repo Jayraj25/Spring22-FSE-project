@@ -102,13 +102,15 @@ export default class PollResponseController implements PollResponseControllerI {
 
         let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
         if(isPollClosed === true){
+            //The client shouldn't request this again
+            res.sendStatus(400);
+        //    the poll is not exist at all
+        }else if (isPollClosed === null){
             res.sendStatus(404);
-        }else{
-            // @ts-ignore
-            if (req.params.pid){
-                PollResponseController.pollResponseDao.createPollResponse(userId,req.params.pid, req.body)
+        }
+        else{
+        PollResponseController.pollResponseDao.createPollResponse(userId,req.params.pid, req.body)
                     .then((pollResponse: PollResponse) => res.json(pollResponse));
-            }
         }
 
     }
@@ -121,24 +123,36 @@ export default class PollResponseController implements PollResponseControllerI {
      * on whether updating a pollResponse was successful or not
      */
     updatePollResponse = async (req: Request, res: Response) =>{
-        let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
-        if(isPollClosed === true){
-            res.sendStatus(404);
-        }else{
-        PollResponseController.pollResponseDao.updatePollResponse(req.params.uid,req.params.pid,req.body)
-            .then(status => res.json(status));
+        try {
+            let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid).catch(function(err) {
+                    console.error(err);
+                    res.status(500).json(err);})
+            if(isPollClosed === true){
+                console.log("Poll is closed");
+                res.sendStatus(400);
+            }else if (isPollClosed === null){
+                res.sendStatus(404);
+            }else{
+                PollResponseController.pollResponseDao.updatePollResponse(req.params.uid,req.params.pid,req.body)
+                    .then(status => res.json(status));
+            }
+        }catch (e) {
+            res.sendStatus(404)
         }
+
     }
     /**
      * @param {Request} req Represents request from client, including path
      * parameter pid and uid representing pollId and userId, if the poll is already closed,
      * the deletePollResponse will send a 404 code.
      *  @param {Response} res Represents response to client, including status
-     * on whether deleting a pollResponse was successful or not
+     *  on whether deleting a pollResponse was successful or not
      */
     deletePollResponse = async (req: Request, res: Response) =>{
         let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
         if(isPollClosed === true){
+            res.sendStatus(400);
+        }else if (isPollClosed === null){
             res.sendStatus(404);
         }else{
         PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,req.params.uid)

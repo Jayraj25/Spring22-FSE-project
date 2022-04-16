@@ -33,24 +33,21 @@ export default class PollResponseDao implements PollResponseDaoI {
 
 
     async isPollClosed(pid:string): Promise<boolean> {
-        let isPollClosed;
+        let isPollClosed = null;
         await PollModel.findById(pid).then(poll=> {
             if (poll != null){
                 isPollClosed = poll.closed;
-            }else{
-                isPollClosed = null;
-            }
+                }
         })
-
         // @ts-ignore
-        return isPollClosed
+        return isPollClosed;
     }
     /**
      * Inserts pollResponse instance into the database.
      * @param {string} uid User's primary key
      * @param {string} pid Poll's primary key
      * @param {PollResponse} pollResponse Instance to be inserted in the database.
-     * @returns Promise To be notified when the pollResponse is inserted in the database.
+     * @returns Promise To be notified when the pollResponse is inserted in the database
      */
     async createPollResponse(uid: string, pid:string, pollResponse: PollResponse): Promise<PollResponse> {
         //console.log(pollResponse);
