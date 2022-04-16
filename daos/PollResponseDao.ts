@@ -3,8 +3,11 @@
  * to integrate with MongoDB
  */
 import PollResponse from "../models/PollResponse";
+import Poll from "../models/Poll";
 import PollResponseDaoI from "../interfaces/PollResponseDaoI";
 import PollResponseModel from "../mongoose/PollResponseModel";
+import PollModel from "../mongoose/PollModel";
+import {json} from "express";
 
 /**
  * @class PollResponseDao Implements Data Access Object managing data storage
@@ -28,6 +31,20 @@ export default class PollResponseDao implements PollResponseDaoI {
 
     private constructor() {}
 
+
+    async isPollClosed(pid:string): Promise<boolean> {
+        let isPollClosed;
+        await PollModel.findById(pid).then(poll=> {
+            if (poll != null){
+                isPollClosed = poll.closed;
+            }else{
+                isPollClosed = null;
+            }
+        })
+
+        // @ts-ignore
+        return isPollClosed
+    }
     /**
      * Inserts pollResponse instance into the database.
      * @param {string} uid User's primary key
@@ -69,7 +86,7 @@ export default class PollResponseDao implements PollResponseDaoI {
      * @returns Promise To be notified when pollResponse is updated in the database
      */
     async updatePollResponse(uid: string ,pid: string ,pollResponse: PollResponse): Promise<any> {
-        console.log(pollResponse)
+        // console.log(pollResponse)
 
         return PollResponseModel.updateOne({pollId: pid, respondedBy: uid}, {$set: pollResponse});
     }
