@@ -58,4 +58,14 @@ export default class PollDao implements PollDaoI {
     }
 
 
+    /**
+     * Closes a poll by its primary key
+     * @param {string} pid poll's primary key
+     * @returns Promise To be notified regarding the status of the operation
+     */
+    async closePoll(pid: string): Promise<any> {
+        return PollModel.updateOne({_id: pid}, {$set: {closed: true}});
+    }
+
+
 }
