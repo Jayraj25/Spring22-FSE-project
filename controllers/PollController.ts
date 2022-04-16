@@ -11,6 +11,10 @@ import PollDao from "../daos/PollDao";
  * Defines the following HTTP endpoints:
  * <ul>
  *     <li>POST /api/users/:uid/creates/polls to create a new poll instance for a given user</li>
+ *     <li>GET  /api/polls to get all polls
+ *     <li>GET /api/polls/:pid to get poll by poll id
+ *     <li>DELETE /api/users/:uid/deletepoll/polls/:pid to delete a poll
+ *     <li>PUT /api/users/:uid/close/polls/:pid to close a poll
  * </ul>
  * @property {PollDao} pollDao Singleton DAO implementing poll CRUD operations
  * @property {PollController} pollController Singleton controller implementing
@@ -36,6 +40,7 @@ export default class PollController implements PollControllerI {
             app.get('/api/polls',PollController.pollController.getAllPolls);
             app.get('/api/polls/:pid',PollController.pollController.getPollById);
             app.delete('/api/users/:uid/deletepoll/polls/:pid', PollController.pollController.deletePoll);
+            app.put('/api/users/:uid/close/polls/:pid', PollController.pollController.closePoll);
 
         }
         return PollController.pollController;
@@ -64,7 +69,7 @@ export default class PollController implements PollControllerI {
 
     /**
      * Retrieves all polls from the database and returns an array of polls.
-     * @param req Represents request from client
+     * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the tuit objects
      */
@@ -75,7 +80,7 @@ export default class PollController implements PollControllerI {
 
     /**
      * Retrieves a poll from the database by id and returns a poll.
-     * @param req Represents request from client
+     * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the tuit objects
      */
@@ -87,7 +92,7 @@ export default class PollController implements PollControllerI {
 
     /**
      * Deletes a poll if the delete request is from the creator. Else ignores the request
-     * @param req Represents request from client
+     * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the status of the delete operation
      */
     deletePoll = async (req: Request, res: Response) => {
@@ -110,4 +115,31 @@ export default class PollController implements PollControllerI {
         }
 
     }
+
+
+    /**
+     * Close a poll if the request is from the creator. Else ignore the request
+     * @param {Request} req Represents request from client
+     * @param {Response} res Represents a response to client with the status of close operation
+     */
+    closePoll = async(req: Request, res: Response) => {
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+
+        const poll = await PollController.pollDao.getPollById(req.params.pid);
+        if(poll != null) {
+            if (poll.createdBy.toString() === userId.toString()) {
+                PollController.pollDao.closePoll(req.params.pid).then((status) => res.json(status));
+            }
+            else {
+                res.json("Only creator can close poll")
+            }
+        }
+
+        else {
+            res.sendStatus(404);
+        }
+    }
+
 }
+
