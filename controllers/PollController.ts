@@ -71,7 +71,7 @@ export default class PollController implements PollControllerI {
      * Retrieves all polls from the database and returns an array of polls.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON arrays containing the tuit objects
+     * body formatted as JSON arrays containing the poll objects
      */
     getAllPolls = (req: Request, res: Response) => {
         PollController.pollDao.getAllPolls()
@@ -82,7 +82,7 @@ export default class PollController implements PollControllerI {
      * Retrieves a poll from the database by id and returns a poll.
      * @param {Request} req Represents request from client
      * @param {Response} res Represents response to client, including the
-     * body formatted as JSON arrays containing the tuit objects
+     * body formatted as JSON arrays containing the poll objects
      */
     getPollById = (req: Request, res: Response) => {
         PollController.pollDao.getPollById(req.params.pid)
