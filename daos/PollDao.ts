@@ -1,7 +1,7 @@
 import PollDaoI from "../interfaces/PollDaoI";
 import Poll from "../models/Poll";
 import PollModel from "../mongoose/PollModel";
-import TuitModel from "../mongoose/TuitModel";
+
 
 
 export default class PollDao implements PollDaoI {
@@ -55,6 +55,16 @@ export default class PollDao implements PollDaoI {
      */
     async deletePoll(pid: string): Promise<any> {
         return PollModel.deleteOne({_id: pid});
+    }
+
+
+    /**
+     * Closes a poll by its primary key
+     * @param {string} pid poll's primary key
+     * @returns Promise To be notified regarding the status of the operation
+     */
+    async closePoll(pid: string): Promise<any> {
+        return PollModel.updateOne({_id: pid}, {$set: {closed: true}});
     }
 
 

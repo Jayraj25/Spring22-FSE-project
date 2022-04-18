@@ -9,4 +9,5 @@ export default interface PollControllerI {
     getAllPolls(req: Request, res: Response): void;
     getPollById(req: Request, res: Response): void;
     deletePoll(req: Request, res: Response): void;
+    closePoll(req: Request, res: Response): void;
 }

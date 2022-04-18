@@ -9,4 +9,5 @@ export default interface PollDaoI {
     getAllPolls(): Promise<Poll[]>;
     getPollById(id: string): Promise<Poll>;
     deletePoll(pid: string): Promise<any>;
+    closePoll(pid: string): Promise<any>;
 }
