@@ -38,7 +38,7 @@ export default class PollResponseDao implements PollResponseDaoI {
             if (poll != null){
                 isPollClosed = poll.closed;
                 }
-        })
+        }).catch((e)=>{console.log(e)})
         // @ts-ignore
         return isPollClosed;
     }
@@ -71,7 +71,7 @@ export default class PollResponseDao implements PollResponseDaoI {
      * @returns Promise To be notified when the pollResponses are retrieved from
      * database
      */
-    async findAllUsersReplyPollResponse(pid: string): Promise<any> {
+    async findAllUsersReplyByPollId(pid: string): Promise<any> {
         return await PollResponseModel.find({pollId: pid}).populate("respondedBy").exec();
     }
 
