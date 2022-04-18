@@ -33,6 +33,9 @@ export default class PollController implements PollControllerI {
 
             //Restful User Web service API
             app.post('/api/users/:uid/creates/polls',PollController.pollController.createPoll);
+            app.get('/api/polls',PollController.pollController.getAllPolls);
+            app.get('/api/polls/:pid',PollController.pollController.getPollById);
+            app.delete('/api/users/:uid/deletepoll/polls/:pid', PollController.pollController.deletePoll);
 
         }
         return PollController.pollController;
@@ -59,6 +62,52 @@ export default class PollController implements PollControllerI {
             .then((poll: Poll) => res.json(poll));
     }
 
+    /**
+     * Retrieves all polls from the database and returns an array of polls.
+     * @param req Represents request from client
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the tuit objects
+     */
+    getAllPolls = (req: Request, res: Response) => {
+        PollController.pollDao.getAllPolls()
+            .then((poll: Poll[]) => res.json(poll));
+    }
+
+    /**
+     * Retrieves a poll from the database by id and returns a poll.
+     * @param req Represents request from client
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON arrays containing the tuit objects
+     */
+    getPollById = (req: Request, res: Response) => {
+        PollController.pollDao.getPollById(req.params.pid)
+            .then((poll: Poll) => res.json(poll));
+    }
 
 
+    /**
+     * Deletes a poll if the delete request is from the creator. Else ignores the request
+     * @param req Represents request from client
+     * @param {Response} res Represents response to client, including the status of the delete operation
+     */
+    deletePoll = async (req: Request, res: Response) => {
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+
+        const poll = await PollController.pollDao.getPollById(req.params.pid);
+        if(poll != null) {
+            if (poll.createdBy.toString() === userId.toString()) {
+                PollController.pollDao.deletePoll(req.params.pid)
+                    .then((status) => res.json(status));
+            }
+            else {
+                res.json("Only creator can delete poll")
+            }
+        }
+
+        else {
+            res.sendStatus(404);
+        }
+
+    }
 }
