@@ -8,8 +8,9 @@
  *     <li>follow</li>
  *     <li>bookmark</li>
  *     <li>message</li>
+ *     <li>polls</li>
  * </ul>
- * 
+ *
  * Connects to a remote MongoDB instance hosted on the Atlas cloud database
  * service
  */
@@ -23,6 +24,8 @@ import BookmarkController from './controllers/BookmarkController';
 import MessageController from './controllers/MessageController';
 import AuthenticationController from "./controllers/AuthenticationController";
 import DislikesController from "./controllers/DislikesController";
+import PollController from "./controllers/PollController";
+import PollResponseController from "./controllers/PollResponseController";
 
 require("dotenv").config({ path: "./.env"});
 // console.log(process.env.DB_PASSWORD);
@@ -30,8 +33,8 @@ console.log("Up and running....");
 
 // connect to the database
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://fsemongodb:' + process.env.DB_PASSWORD
-    + '@cluster0.h9vbo.mongodb.net' + '/Tuiter?retryWrites=true&w=majority');
+
+mongoose.connect(process.env.MONGO_CONNECTION_STRING);
 
 const session = require("express-session");
 const cors = require('cors')
@@ -41,8 +44,7 @@ app.use(cors({
     origin: process.env.CORS_ORIGIN,
     // origin: 'https://quizzical-mcclintock-e40782.netlify.app'
 }));
-console.log(process.env.SESSION_SECRET);
-console.log(process.env.CORS_ORIGIN);
+
 let sess = {
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
@@ -75,6 +77,8 @@ const dislikeController = DislikesController.getInstance(app);
 const followController = FollowController.getInstance(app);
 const bookmarkController = BookmarkController.getInstance(app);
 const messageController = MessageController.getInstance(app);
+const pollController = PollController.getInstance(app);
+const pollResponseController = PollResponseController.getInstance(app);
 AuthenticationController(app);
 
 /**
