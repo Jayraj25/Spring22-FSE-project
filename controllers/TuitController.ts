@@ -99,7 +99,7 @@ export default class TuitController implements TuitControllerI {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
         // let userId = req.session['profile']._id;
-        console.log(userId);
+        // console.log(userId);
         // @ts-ignore
         // console.log(req.session['profile']);
         TuitController.tuitDao.createTuit(userId, req.body)

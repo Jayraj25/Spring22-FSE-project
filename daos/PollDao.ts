@@ -47,6 +47,15 @@ export default class PollDao implements PollDaoI {
         return PollModel.findById(id);
     }
 
+    /**
+     * Finds polls by its creator's primary key.
+     * @param {string} uid creator's primary key
+     * @returns Promise To be notified when the polls are found.
+     */
+    async getPollByUser(uid: string): Promise<any> {
+        return PollModel.find({createdBy: uid}).populate("createdBy").exec();
+    }
+
 
     /**
      * Deletes a poll by its primary key
