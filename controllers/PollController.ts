@@ -15,7 +15,7 @@ import PollDao from "../daos/PollDao";
  *     <li>GET /api/polls/:pid to get poll by poll id
  *     <li>DELETE /api/users/:uid/deletepoll/polls/:pid to delete a poll
  *     <li>PUT /api/users/:uid/close/polls/:pid to close a poll
- *     <li>
+ *     <li>GET /api/users/:uid/pollscreated to find all polls user created
  * </ul>
  * @property {PollDao} pollDao Singleton DAO implementing poll CRUD operations
  * @property {PollController} pollController Singleton controller implementing
