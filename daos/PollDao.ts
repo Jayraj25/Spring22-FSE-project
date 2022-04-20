@@ -35,7 +35,7 @@ export default class PollDao implements PollDaoI {
      * @returns Promise To be notified when the polls are found.
      */
     async getAllPolls(): Promise<Poll[]> {
-        return PollModel.find();
+        return PollModel.find().populate("createdBy").exec();
     }
 
     /**
@@ -44,7 +44,7 @@ export default class PollDao implements PollDaoI {
      * @returns Promise To be notified when the poll is found.
      */
     async getPollById(id: string): Promise<any> {
-        return PollModel.findById(id);
+        return PollModel.findById(id).populate("createdBy").exec();
     }
 
     /**
