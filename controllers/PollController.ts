@@ -113,10 +113,14 @@ export default class PollController implements PollControllerI {
     deletePoll = async (req: Request, res: Response) => {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        console.log(userId);
+
+
 
         const poll = await PollController.pollDao.getPollById(req.params.pid);
         if(poll != null) {
-            if (poll.createdBy.toString() === userId.toString()) {
+            console.log(poll.createdBy._id.toString() === userId.toString());
+            if (poll.createdBy._id.toString() === userId.toString()) {
                 PollController.pollDao.deletePoll(req.params.pid)
                     .then((status) => res.json(status));
             }
@@ -140,10 +144,12 @@ export default class PollController implements PollControllerI {
     closePoll = async(req: Request, res: Response) => {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        console.log(userId);
 
         const poll = await PollController.pollDao.getPollById(req.params.pid);
+        console.log(poll.createdBy._id);
         if(poll != null) {
-            if (poll.createdBy.toString() === userId.toString()) {
+            if (poll.createdBy._id.toString() === userId.toString()) {
                 PollController.pollDao.closePoll(req.params.pid).then((status) => res.json(status));
             }
             else {
