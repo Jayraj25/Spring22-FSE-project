@@ -143,6 +143,7 @@ export default class PollController implements PollControllerI {
      */
     closePoll = async(req: Request, res: Response) => {
         // @ts-ignore
+        //compares userId to poll.createdBy ID
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
         console.log(userId);
 
