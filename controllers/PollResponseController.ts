@@ -143,13 +143,16 @@ export default class PollResponseController implements PollResponseControllerI {
      *  on whether deleting a pollResponse was successful or not
      */
     deletePollResponse = async (req: Request, res: Response) =>{
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+
         let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
         if(isPollClosed === true){
             res.sendStatus(400);
         }else if (isPollClosed === null){
             res.sendStatus(404);
         }else{
-        PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,req.params.uid)
+        PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,userId)
                 .then(status => res.json(status));
         }
     }
