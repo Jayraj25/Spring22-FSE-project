@@ -108,4 +108,15 @@ export default class PollResponseDao implements PollResponseDaoI {
     async findPollResponseByPollId(pid: string): Promise<any> {
         return PollResponseModel.find({pollId:pid});
     }
+
+    /**
+     * Uses PollResponseModel to retrieve a pollResponses documents from pollResponses collections.
+     * @param {string} pid Poll's primary key
+     * @param {string} uid User's primary key
+     * @returns Promise To be notified when the pollResponses are retrieved from
+     * database
+     */
+    async findPollResponseByPollIdByUserId(uid:string, pid: string): Promise<any> {
+        return PollResponseModel.findOne({pollId:pid, respondedBy:uid});
+    }
 }

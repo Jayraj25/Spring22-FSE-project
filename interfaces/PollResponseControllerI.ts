@@ -10,4 +10,5 @@ export default interface PollResponseControllerI {
     findPollResponseByPollId(req: Request, res: Response): void;
     updatePollResponse(req: Request, res: Response): void;
     deletePollResponse(req: Request, res: Response): void;
+    userTogglesPollResponse(req: Request, res: Response): void;
 }
