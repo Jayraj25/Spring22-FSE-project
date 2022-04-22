@@ -45,6 +45,7 @@ export default class PollResponseController implements PollResponseControllerI {
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyByPollId);
             app.get('/api/responses/polls/:pid/',PollResponseController.pollResponseController.findPollResponseByPollId);
             app.post('/api/user/:uid/response/polls/:pid',PollResponseController.pollResponseController.createPollResponse);
+            app.put('/api/users/:uid/poll/:pid/response',PollResponseController.pollResponseController.userTogglesPollResponse);
             app.put('/api/users/:uid/poll/:pid',PollResponseController.pollResponseController.updatePollResponse);
             app.delete('/api/users/:uid/deleteresponse/polls/:pid', PollResponseController.pollResponseController.deletePollResponse);
         }
@@ -165,6 +166,7 @@ export default class PollResponseController implements PollResponseControllerI {
         const pid = req.params.pid;
         // @ts-ignore
         const userId = uid === "my" && req.session['profile'] ? req.session['profile']._id : uid;
+        console.log(userId)
         let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
         if(isPollClosed === true){
             res.sendStatus(400);
@@ -174,14 +176,14 @@ export default class PollResponseController implements PollResponseControllerI {
             // @ts-ignore
             try {  //findUserLikesTuit
                 const userAlreadyResponsePoll = await pollResponseDao.findPollResponseByPollIdByUserId(userId, pid);
-
+                console.log(userAlreadyResponsePoll)
                 if (userAlreadyResponsePoll) {
                     await pollResponseDao.updatePollResponse(userId,pid,req.body)
-                        .then(status => res.json(status));
+                        // .then(status => res.json(status));
 
                 } else {
                     await pollResponseDao.createPollResponse(userId,pid,req.body)
-                        .then(status => res.json(status));
+                        // .then(status => res.json(status));
                 }
                 // res.send(tuit);
                 res.sendStatus(200);
