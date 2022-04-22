@@ -44,6 +44,7 @@ export default class PollResponseController implements PollResponseControllerI {
             app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollResponsesByUser);
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyByPollId);
             app.get('/api/responses/polls/:pid/',PollResponseController.pollResponseController.findPollResponseByPollId);
+            app.get('/api/users/:uid/response/polls/:pid',PollResponseController.pollResponseController.findPollResponseByPollIdByUserId);
             app.post('/api/user/:uid/response/polls/:pid',PollResponseController.pollResponseController.createPollResponse);
             app.put('/api/users/:uid/poll/:pid/response',PollResponseController.pollResponseController.userTogglesPollResponse);
             app.put('/api/users/:uid/poll/:pid',PollResponseController.pollResponseController.updatePollResponse);
@@ -79,6 +80,19 @@ export default class PollResponseController implements PollResponseControllerI {
             .then((pollResponses: PollResponse) => res.json(pollResponses));
 
     /**
+     * @param {Request} req Represents request from client, including path
+     * parameter pid identifying the primary key of the poll and uid identifying the primary key of the user
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the pollResponse that matches the user ID and poll ID
+     */
+    findPollResponseByPollIdByUserId = (req: Request, res: Response) =>{
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        // @ts-ignore
+        PollResponseController.pollResponseDao.findPollResponseByPollIdByUserId(userId,req.params.pid)
+            .then((pollResponses: PollResponse) => res.json(pollResponses));
+    }
+        /**
      * @param {Request} req Represents request from client, including path
      * parameter pid identifying the primary key of the pollResponse to be retrieved
      * @param {Response} res Represents response to client, including the

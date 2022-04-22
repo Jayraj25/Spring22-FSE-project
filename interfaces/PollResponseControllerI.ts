@@ -8,6 +8,7 @@ export default interface PollResponseControllerI {
     findPollResponsesByUser(req: Request, res: Response): void;
     findAllUsersReplyByPollId(req: Request, res: Response): void;
     findPollResponseByPollId(req: Request, res: Response): void;
+    findPollResponseByPollIdByUserId(req: Request, res: Response): void;
     updatePollResponse(req: Request, res: Response): void;
     deletePollResponse(req: Request, res: Response): void;
     userTogglesPollResponse(req: Request, res: Response): void;
