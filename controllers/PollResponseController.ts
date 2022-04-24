@@ -89,6 +89,8 @@ export default class PollResponseController implements PollResponseControllerI {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
         // @ts-ignore
+        console.log(userId);
+        console.log(req.params.pid);
         PollResponseController.pollResponseDao.findPollResponseByPollIdByUserId(userId,req.params.pid)
             .then((pollResponses: PollResponse) => res.json(pollResponses));
     }

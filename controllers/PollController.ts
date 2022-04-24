@@ -43,6 +43,7 @@ export default class PollController implements PollControllerI {
             app.delete('/api/users/:uid/deletepoll/polls/:pid', PollController.pollController.deletePoll);
             app.put('/api/users/:uid/close/polls/:pid', PollController.pollController.closePoll);
             app.get('/api/users/:uid/pollscreated', PollController.pollController.getPollByUser);
+            app.delete('/api/polls/deleteByQuestion/:pollQuestion',PollController.pollController.deletePollByQuestion);
 
         }
         return PollController.pollController;
@@ -162,6 +163,15 @@ export default class PollController implements PollControllerI {
             res.sendStatus(404);
         }
     }
+    /**
+     * @param {Request} req Represents request from client, including path
+     * parameter content identifying the matching creator of the poll to be deleted
+     * @param {Response} res Represents response to client, including status
+     * on whether deleting a poll was successful or not
+     */
+    deletePollByQuestion = (req: Request, res: Response) =>
+        PollController.pollDao.deletePollByQuestion(req.params.pollQuestion)
+            .then(status => res.json(status));
 
 }
 

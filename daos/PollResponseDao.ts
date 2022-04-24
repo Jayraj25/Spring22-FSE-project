@@ -123,3 +123,4 @@ export default class PollResponseDao implements PollResponseDaoI {
         return await PollResponseModel.findOne({pollId:pid, respondedBy:uid});
     }
 }
+
