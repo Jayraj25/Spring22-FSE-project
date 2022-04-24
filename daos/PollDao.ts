@@ -1,7 +1,6 @@
 import PollDaoI from "../interfaces/PollDaoI";
 import Poll from "../models/Poll";
 import PollModel from "../mongoose/PollModel";
-import TuitModel from "../mongoose/TuitModel";
 
 
 
