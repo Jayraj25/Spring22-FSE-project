@@ -6,7 +6,7 @@ import PollResponse from "../models/PollResponse";
 export default interface PollResponseDaoI {
 
    createPollResponse(uid:string, pid: string, pollResponse: PollResponse): Promise<PollResponse>;
-   findPollResponsesByUser(uid: string): Promise<PollResponse[]>;
+   findPollsResponsedByUser(uid: string): Promise<PollResponse[]>;
    findAllUsersReplyByPollId(pid: string): Promise<PollResponse>;
    findPollResponseByPollIdByUserId(uid:string, pid: string): Promise<PollResponse>;
    updatePollResponse( uid: string ,pid: string ,pollResponse: PollResponse): Promise<any>;
