@@ -61,9 +61,15 @@ export default class PollResponseDao implements PollResponseDaoI {
      * @returns Promise To be notified when the pollResponses are retrieved from
      * database
      */
-    async findPollResponsesByUser(uid: string): Promise<PollResponse[]> {
+    async findPollsResponsedByUser(uid: string): Promise<PollResponse[]> {
         //return PollResponseModel.find({respondedBy: uid}).populate("respondedBy").exec();
-        return PollResponseModel.find({respondedBy: uid});
+        return PollResponseModel.find({respondedBy: uid}).populate({
+            path: "pollId",
+            populate: {
+                path: "createdBy",
+                model: "UserModel",
+            }
+        }).exec();
     }
 
     /**
@@ -122,4 +128,7 @@ export default class PollResponseDao implements PollResponseDaoI {
     async findPollResponseByPollIdByUserId(uid:string, pid: string): Promise<any> {
         return await PollResponseModel.findOne({pollId:pid, respondedBy:uid});
     }
+
+
+
 }

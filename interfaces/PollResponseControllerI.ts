@@ -5,7 +5,7 @@ import { Request, Response } from "express";
 
 export default interface PollResponseControllerI {
     createPollResponse(req: Request, res: Response): void;
-    findPollResponsesByUser(req: Request, res: Response): void;
+    findPollsResponsedByUser(req: Request, res: Response): void;
     findAllUsersReplyByPollId(req: Request, res: Response): void;
     findPollResponseByPollId(req: Request, res: Response): void;
     findPollResponseByPollIdByUserId(req: Request, res: Response): void;

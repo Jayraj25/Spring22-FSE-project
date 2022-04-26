@@ -7,6 +7,7 @@ import PollResponseControllerI from "../interfaces/PollResponseControllerI";
 import PollResponse from "../models/PollResponse";
 import PollController from "./PollController";
 import PollDao from "../daos/PollDao";
+import Likes from "../models/Likes";
 
 /**
  * @class PollResponseController Implements RESTful Web service API for pollResponses resource.
@@ -41,7 +42,7 @@ export default class PollResponseController implements PollResponseControllerI {
             PollResponseController.pollResponseController = new PollResponseController();
 
             //Restful User Web service API
-            app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollResponsesByUser);
+            app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollsResponsedByUser);
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyByPollId);
             app.get('/api/responses/polls/:pid/',PollResponseController.pollResponseController.findPollResponseByPollId);
             app.get('/api/users/:uid/response/polls/:pid',PollResponseController.pollResponseController.findPollResponseByPollIdByUserId);
@@ -61,12 +62,16 @@ export default class PollResponseController implements PollResponseControllerI {
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the pollResponse objects
      */
-    findPollResponsesByUser = (req: Request, res: Response) => {
+    findPollsResponsedByUser = (req: Request, res: Response) => {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
         // @ts-ignore
-        PollResponseController.pollResponseDao.findPollResponsesByUser(userId)
-            .then((pollResponses: PollResponse[]) => res.json(pollResponses));
+        PollResponseController.pollResponseDao.findPollsResponsedByUser(userId)
+            .then((pollResponses: PollResponse[]) => {
+                const pollResponsesNonNullPolls = pollResponses.filter(pollResponses => pollResponses.pollId);
+                const pollsFromResponses = pollResponsesNonNullPolls.map(pollResponses => pollResponses.pollId);
+                res.json(pollsFromResponses);
+            });
     }
 
     /**
