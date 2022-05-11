@@ -6,6 +6,8 @@ import PollResponseDao from "../daos/PollResponseDao";
 import PollResponseControllerI from "../interfaces/PollResponseControllerI";
 import PollResponse from "../models/PollResponse";
 import PollController from "./PollController";
+import PollDao from "../daos/PollDao";
+import Likes from "../models/Likes";
 
 /**
  * @class PollResponseController Implements RESTful Web service API for pollResponses resource.
@@ -27,7 +29,7 @@ import PollController from "./PollController";
 export default class PollResponseController implements PollResponseControllerI {
     private static pollResponseDao:PollResponseDao = PollResponseDao.getInstance();
     private static pollResponseController: PollResponseController | null = null;
-
+    private static pollDao: PollDao = PollDao.getInstance();
     private constructor() {}
 
     /**
@@ -40,10 +42,12 @@ export default class PollResponseController implements PollResponseControllerI {
             PollResponseController.pollResponseController = new PollResponseController();
 
             //Restful User Web service API
-            app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollResponsesByUser);
+            app.get('/api/users/:uid/pollsresponded',PollResponseController.pollResponseController.findPollsResponsedByUser);
             app.get('/api/usersrepsonded/polls/:pid',PollResponseController.pollResponseController.findAllUsersReplyByPollId);
             app.get('/api/responses/polls/:pid/',PollResponseController.pollResponseController.findPollResponseByPollId);
+            app.get('/api/users/:uid/response/polls/:pid',PollResponseController.pollResponseController.findPollResponseByPollIdByUserId);
             app.post('/api/user/:uid/response/polls/:pid',PollResponseController.pollResponseController.createPollResponse);
+            app.put('/api/users/:uid/poll/:pid/response',PollResponseController.pollResponseController.userTogglesPollResponse);
             app.put('/api/users/:uid/poll/:pid',PollResponseController.pollResponseController.updatePollResponse);
             app.delete('/api/users/:uid/deleteresponse/polls/:pid', PollResponseController.pollResponseController.deletePollResponse);
         }
@@ -58,12 +62,16 @@ export default class PollResponseController implements PollResponseControllerI {
      * @param {Response} res Represents response to client, including the
      * body formatted as JSON arrays containing the pollResponse objects
      */
-    findPollResponsesByUser = (req: Request, res: Response) => {
+    findPollsResponsedByUser = (req: Request, res: Response) => {
         // @ts-ignore
         let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
         // @ts-ignore
-        PollResponseController.pollResponseDao.findPollResponsesByUser(userId)
-            .then((pollResponses: PollResponse[]) => res.json(pollResponses));
+        PollResponseController.pollResponseDao.findPollsResponsedByUser(userId)
+            .then((pollResponses: PollResponse[]) => {
+                const pollResponsesNonNullPolls = pollResponses.filter(pollResponses => pollResponses.pollId);
+                const pollsFromResponses = pollResponsesNonNullPolls.map(pollResponses => pollResponses.pollId);
+                res.json(pollsFromResponses);
+            });
     }
 
     /**
@@ -77,6 +85,19 @@ export default class PollResponseController implements PollResponseControllerI {
             .then((pollResponses: PollResponse) => res.json(pollResponses));
 
     /**
+     * @param {Request} req Represents request from client, including path
+     * parameter pid identifying the primary key of the poll and uid identifying the primary key of the user
+     * @param {Response} res Represents response to client, including the
+     * body formatted as JSON containing the pollResponse that matches the user ID and poll ID
+     */
+    findPollResponseByPollIdByUserId = (req: Request, res: Response) =>{
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+        // @ts-ignore
+        PollResponseController.pollResponseDao.findPollResponseByPollIdByUserId(userId,req.params.pid)
+            .then((pollResponses: PollResponse) => res.json(pollResponses));
+    }
+        /**
      * @param {Request} req Represents request from client, including path
      * parameter pid identifying the primary key of the pollResponse to be retrieved
      * @param {Response} res Represents response to client, including the
@@ -143,14 +164,53 @@ export default class PollResponseController implements PollResponseControllerI {
      *  on whether deleting a pollResponse was successful or not
      */
     deletePollResponse = async (req: Request, res: Response) =>{
+        // @ts-ignore
+        let userId = req.params.uid === "my" && req.session['profile'] ? req.session['profile']._id : req.params.uid;
+
         let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
         if(isPollClosed === true){
             res.sendStatus(400);
         }else if (isPollClosed === null){
             res.sendStatus(404);
         }else{
-        PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,req.params.uid)
+        PollResponseController.pollResponseDao.deletePollResponse(req.params.pid,userId)
                 .then(status => res.json(status));
         }
     }
+
+    userTogglesPollResponse = async (req: Request, res: Response) => {
+        const pollResponseDao = PollResponseController.pollResponseDao;
+        const pollDao = PollResponseController.pollDao;
+        const uid = req.params.uid;
+        const pid = req.params.pid;
+        // @ts-ignore
+        const userId = uid === "my" && req.session['profile'] ? req.session['profile']._id : uid;
+        console.log(userId)
+        let isPollClosed = await PollResponseController.pollResponseDao.isPollClosed(req.params.pid)
+        if(isPollClosed === true){
+            res.sendStatus(400);
+        }else if (isPollClosed === null) {
+            res.sendStatus(404)
+        }else{
+            // @ts-ignore
+            try {  //findUserLikesTuit
+                const userAlreadyResponsePoll = await pollResponseDao.findPollResponseByPollIdByUserId(userId, pid);
+                console.log(userAlreadyResponsePoll)
+                if (userAlreadyResponsePoll) {
+                    await pollResponseDao.updatePollResponse(userId,pid,req.body)
+                        // .then(status => res.json(status));
+
+                } else {
+                    await pollResponseDao.createPollResponse(userId,pid,req.body)
+                        // .then(status => res.json(status));
+                }
+                // res.send(tuit);
+                res.sendStatus(200);
+            } catch (error) {
+                res.sendStatus(404);
+            }
+        };
+
+    }
+
 }

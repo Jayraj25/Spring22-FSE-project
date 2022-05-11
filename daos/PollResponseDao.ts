@@ -61,8 +61,15 @@ export default class PollResponseDao implements PollResponseDaoI {
      * @returns Promise To be notified when the pollResponses are retrieved from
      * database
      */
-    async findPollResponsesByUser(uid: string): Promise<PollResponse[]> {
-        return PollResponseModel.find({respondedBy: uid}).populate("respondedBy").exec();
+    async findPollsResponsedByUser(uid: string): Promise<PollResponse[]> {
+        //return PollResponseModel.find({respondedBy: uid}).populate("respondedBy").exec();
+        return PollResponseModel.find({respondedBy: uid}).populate({
+            path: "pollId",
+            populate: {
+                path: "createdBy",
+                model: "UserModel",
+            }
+        }).exec();
     }
 
     /**
@@ -72,7 +79,8 @@ export default class PollResponseDao implements PollResponseDaoI {
      * database
      */
     async findAllUsersReplyByPollId(pid: string): Promise<any> {
-        return await PollResponseModel.find({pollId: pid}).populate("respondedBy").exec();
+        //return await PollResponseModel.find({pollId: pid}).populate("respondedBy").exec();
+        return await PollResponseModel.find({pollId: pid});
     }
 
     /**
@@ -106,6 +114,22 @@ export default class PollResponseDao implements PollResponseDaoI {
      * database
      */
     async findPollResponseByPollId(pid: string): Promise<any> {
-        return PollResponseModel.find({pollId:pid});
+        //return await PollResponseModel.find({pollId:pid}).populate("respondedBy").exec();
+        return await PollResponseModel.find({pollId:pid});
     }
+
+    /**
+     * Uses PollResponseModel to retrieve a pollResponses documents from pollResponses collections.
+     * @param {string} pid Poll's primary key
+     * @param {string} uid User's primary key
+     * @returns Promise To be notified when the pollResponses are retrieved from
+     * database
+     */
+    async findPollResponseByPollIdByUserId(uid:string, pid: string): Promise<any> {
+        return await PollResponseModel.findOne({pollId:pid, respondedBy:uid});
+    }
+
+
+
 }
+
